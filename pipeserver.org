@@ -16,14 +16,14 @@
 
 *** Execute *pipeserver*
 #+BEGIN_SRC sh
-ls -l pibesh
-cp pibesh /usr/local/bin/
-ls -l /usr/local/bin/pipese
+ls -l pipeserver
+cp pipeserver /usr/bin/
+ls -l /usr/bin/pipeserver
 #+END_SRC
 
 #+RESULTS:
-| -rwxr-xr-x | 1 | root | staff | 379 | Jan | 6 | 06:11 | pibesh                |
-| -rwxr-xr-x | 1 | root | staff | 379 | Jan | 6 | 06:13 | /usr/local/bin/pibesh |
+| -rwxr-xr-x | 1 | root | root | 380 | Jan | 24 | 06:21 | pipeserver          |
+| -rwxr-xr-x | 1 | root | root | 380 | Jan | 24 | 06:24 | /usr/bin/pipeserver |
 
 *** Init Pipeserver Parameters
 #+NAME: init_pipeserver

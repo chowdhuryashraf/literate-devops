@@ -1155,7 +1155,8 @@ Mode 0x0361: 1280x800 (+5120), 24 bits
 Config Status: cfg=new, avail=yes, need=no, active=unknown
 #+END_EXAMPLE
 
-* TODO X windows and xmonad
+* DONE X windows and xmonad
+  CLOSED: [2016-01-24 Sun 07:17]
 
 We’ll be installing a window manager, as opposed to a full desktop environment. It’s a good idea to understand the differences between the two. For me, the main reason
 to go for a window manager was really performance.
@@ -1174,16 +1175,6 @@ Section "Device"
     Option "NoLogo" "true"
 EndSection
 #+END_EXAMPLE
-
-** TODO capslog as ctl and ctl alt backspace as kill windows
-I made the Caps Lock key and alternative to CTRL key (for emacs) and I set CTRL+ALT+Backspace as
-the combination to kill X Windows:
-
-#+BEGIN_SRC sh
- localectl set-X11-keymap  caps:ctrl_modifier,terminate:ctrl_alt_bksp
-#+END_SRC
-
-#+RESULTS:
 
 ** DONE Next I configured the terminal to use the inconsolata font
    CLOSED: [2016-01-24 Sun 03:01]
@@ -1331,7 +1322,18 @@ exec xmonad
 
 #+END_SRC
 
-** YOROOT installtaion
+** OPTIONAL capslog as ctl and ctl alt backspace as kill windows
+I made the Caps Lock key and alternative to CTRL key (for emacs) and I set CTRL+ALT+Backspace as
+the combination to kill X Windows:
+
+#+BEGIN_SRC sh
+ localectl caps:ctrl_modifier,terminate:ctrl_alt_bksp
+#+END_SRC
+
+#+RESULTS:
+
+* DONE YOROOT installtaion
+  CLOSED: [2016-01-24 Sun 06:33]
 #+BEGIN_SRC elisp :var filename="/etc/pacman.conf" :var buffer=addserverpy()
   (with-temp-buffer
   (insert-file-contents filename)
@@ -1469,7 +1471,15 @@ Server = http://repo.archlinux.fr/$arch
 
 
 #+call: cmdaync("pacman -Syu")
+
+#+RESULTS:
+: command  is sended to /tmp/literate-devops
+
 #+call: cmdaync("pacman -S yaourt")
+
+#+RESULTS:
+: command  is sended to /tmp/literate-devops
+
 * Start X
 At this point startx should start xmonad and show you your downloaded image as background.
 

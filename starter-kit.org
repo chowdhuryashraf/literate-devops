@@ -49,7 +49,7 @@ much more like reading and editing of code using its major mode.
    :CUSTOM_ID: code-block-org-devops
    :END:
 
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 (org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
 #+END_SRC
 
