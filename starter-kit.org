@@ -64,11 +64,31 @@ itself as =void function: foobar= errors) try M-x regen-autoloads.
 
 If you want to keep your regular =~/.emacs.d= in place and just launch
 a single instance using the starter kit, try the following invocation:
+#+NAME: empath
+#+BEGIN_SRC sh
+pwd
+#+END_SRC
 
-#+begin_src sh
-  emacs -q -l ~/path/to/emacs24-starter-kit/init.el \
-      --eval "(run-hooks 'after-init-hook)"
+#+RESULTS: empath
+: /home/rks/literate-emacs
+
+
+
+#+begin_src sh :var path=empath[0] :tangle emacs_starter.sh  :shebang #!/bin/bash :dir /sudo:: 
+  emacs -q -l $path/init.el \
+      --eval "(run-hooks 'after-init-hook)" &
 #+end_src
+
+#+BEGIN_SRC sh :var path=empath[0]   :dir /sudo::  
+ls -la $path/emacs_starter.sh 
+cp $path/emacs_starter.sh  /bin/
+chmod 755 /bin/emacs_starter.sh
+ls -la /bin/emacs_starter.sh
+#+END_SRC
+
+#+RESULTS:
+| -rwxr-xr-x | 1 | rks  | rks  | 151 | Jan | 6 | 02:56 | /home/rks/literate-emacs/emacs_starter.sh |
+| -rwxr-xr-x | 1 | root | root | 151 | Jan | 6 | 03:05 | /bin/emacs_starter.sh                     |
 
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
@@ -227,7 +247,8 @@ specified. See the file [[file:COPYING][COPYING]] for details.
 
 The latest version is at http://github.com/eschulte/emacs24-starter-kit/
 
-* Implementation
+* DONE Implementation
+  DEADLINE: <2016-01-05 মঙ্গল>
   :PROPERTIES:
   :CUSTOM_ID: implementation
   :END:
@@ -393,6 +414,17 @@ everyone using the starter kit.
   #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-registers.org")
   #+end_src
+  
+  #+RESULTS:
+  : Loaded /home/rks/literalemacs/starter-kit-registers.el
+- Org mode in [[starter-kit-org.org]]
+#+BEGIN_SRC emacs-lisp 
+  (starter-kit-load "starter-kit-org.org")
+#+END_SRC
+
+#+RESULTS:
+: Loaded /home/rks/literalemacs/starter-kit-org.el
+
 
 ** Load User/System Specific Files
 *** System/User specific customizations
