@@ -86,6 +86,18 @@ much more like reading and editing of code using its major mode.
   (setq org-src-tab-acts-natively t)
 #+end_src
 
+** Org Capture 
+   :PROPERTIES:
+   :CUSTOM_ID: code-block-org-capture
+   :END:
+Capture lets you quickly store notes with little interruption of your
+work flow. 
+
+#+BEGIN_SRC emacs-lisp
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(define-key global-map "\C-cc" 'org-capture)
+#+END_SRC
+
 ** The Library of Babel
    :PROPERTIES:
    :CUSTOM_ID: library-of-babel
