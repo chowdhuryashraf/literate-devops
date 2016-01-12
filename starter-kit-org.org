@@ -98,6 +98,9 @@ work flow.
 (define-key global-map "\C-cc" 'org-capture)
 #+END_SRC
 
+#+RESULTS:
+: org-capture
+
 ** The Library of Babel
    :PROPERTIES:
    :CUSTOM_ID: library-of-babel

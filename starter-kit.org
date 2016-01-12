@@ -81,14 +81,14 @@ pwd
 
 #+BEGIN_SRC sh :var path=empath[0]   :dir /sudo::  
 ls -la $path/emacs_starter.sh 
-cp $path/emacs_starter.sh  /bin/
-chmod 755 /bin/emacs_starter.sh
-ls -la /bin/emacs_starter.sh
+cp $path/emacs_starter.sh  /bin/em
+chmod 755 /bin/em
+ls -la /bin/em
 #+END_SRC
 
 #+RESULTS:
-| -rwxr-xr-x | 1 | rks  | rks  | 151 | Jan | 6 | 02:56 | /home/rks/literate-emacs/emacs_starter.sh |
-| -rwxr-xr-x | 1 | root | root | 151 | Jan | 6 | 03:05 | /bin/emacs_starter.sh                     |
+| -rwxrwxr-x | 1 | rks  | rks  | 151 | Jan |  6 | 03:37 | /home/rks/literate-emacs/emacs_starter.sh |
+| -rwxr-xr-x | 1 | root | root | 151 | Jan | 10 | 01:03 | /bin/em                                   |
 
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
