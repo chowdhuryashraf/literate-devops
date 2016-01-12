@@ -88,6 +88,11 @@ Key Bindings.
 ** Org-mode
 Two global binding for Org-mode (see [[file:starter-kit-org.org][starter-kit-org]])
 
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x t") 'org-babel-tangle)
+#+END_SRC
+
+
 The [[http://orgmode.org/manual/Agenda-Views.html#Agenda-Views][Org-mode agenda]] is good to have close at hand
 #+begin_src emacs-lisp
   (define-key global-map "\C-ca" 'org-agenda)

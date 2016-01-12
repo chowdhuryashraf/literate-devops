@@ -942,3 +942,27 @@ Linux and OSX. It does not works on XEmacs.
 #+RESULTS:
 : gtd
 
+** For troubled network auto save frequently 
+#+BEGIN_SRC elisp
+(setq auto-save-interval 1
+          auto-save-timeout 1)
+#+END_SRC
+
+#+RESULTS:
+: 1
+
+
+
+
+*** Automatically save your changes after an customizable interval
+I really like this idea, because it’s dumb to make me hit C-x C-s all the time because of technical details of the computer’s architecture, and almost everything I edit is under version control anyway. I like using auto-save-hook, and that seems to work well, but I want to save all the buffers, because if I switch away from a buffer before it autosaves, I want it to get saved when things next get saved after that. So I combined parts of the two above solutions (this is the first elisp code I’ve written, could have glaring problems)
+#+BEGIN_SRC elisp
+  (defun full-auto-save ()
+    (interactive)
+    (save-excursion
+    (dolist (buf (buffer-list))
+      (set-buffer buf)
+      (if (and (buffer-file-name) (buffer-modified-p))
+          (basic-save-buffer)))))
+(add-hook 'auto-save-hook 'full-auto-save)
+#+END_SRC

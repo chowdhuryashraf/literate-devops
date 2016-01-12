@@ -72,8 +72,8 @@ a single instance using the starter kit, try the following invocation:
 #+RESULTS: empath
 : /usr/local/src/literate-emacs
 
-
-#+begin_src sh :var path=empath[0] :tangle emacs_starter.sh  :shebang #!/bin/bash :dir /sudo:: 
+*** Install in Desktop
+#+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash 
   emacs -q -l $path/init.el \
       --eval "(run-hooks 'after-init-hook)" &
 #+end_src
@@ -86,8 +86,31 @@ ls -la /bin/em
 #+END_SRC
 
 #+RESULTS:
-| -rwxr-xr-x | 1 | root | staff | 151 | Jan | 12 | 11:06 | /usr/local/src/literate-emacs/emacs_starter.sh |
-| -rwxr-xr-x | 1 | root | root  | 151 | Jan | 12 | 11:06 | /bin/em                                        |
+| -rwxr-xr-x | 1 | root | staff | 146 | Jan | 12 | 13:54 | /root/literate-emacs/emacs_starter.sh |
+| -rwxr-xr-x | 1 | root | root  | 146 | Jan | 12 | 13:54 | /bin/em                               |
+
+Note that having a =~/.emacs= file might override the starter kit
+loading, so if you've having trouble loading it, make sure that file
+is not present.
+
+*** Install in Server
+#+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash 
+  emacs -q -l $path/init.el \
+      --eval "(run-hooks 'after-init-hook)" 
+#+end_src
+
+#+RESULTS:
+
+#+BEGIN_SRC sh :var path=empath[0]   :dir /su:root@localhost:  
+ls -la $path/emacs_starter.sh 
+cp $path/emacs_starter.sh  /bin/em
+chmod 755 /bin/em
+ls -la /bin/em
+#+END_SRC
+
+#+RESULTS:
+| -rwxr-xr-x | 1 | root | staff | 146 | Jan | 12 | 13:54 | /root/literate-emacs/emacs_starter.sh |
+| -rwxr-xr-x | 1 | root | root  | 146 | Jan | 12 | 13:54 | /bin/em                               |
 
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
@@ -408,7 +431,7 @@ interested in the actual code implementing the starter kit.
 #+BEGIN_SRC emacs-lisp
 (require 'color-theme)
 (setq color-theme-is-global t)
-(color-theme-initialize)
+;; (color-theme-initialize)
 
 
 (load "color-theme-zenburn")
