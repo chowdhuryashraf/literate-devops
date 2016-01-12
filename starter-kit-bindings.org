@@ -55,6 +55,7 @@ Key Bindings.
 ** Window switching. (C-x o goes to the next window)
 #+begin_src emacs-lisp 
 (windmove-default-keybindings) ;; Shift+direction
+(global-set-key "\M-;" 'other-window)
 (global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
 (global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
 #+end_src
@@ -107,3 +108,11 @@ Rgrep is infinitely useful in multi-file projects.
 #+begin_src emacs-lisp
   (define-key global-map "\C-x\C-r" 'rgrep)
 #+end_src
+** Set Marked
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-a") 'set-mark-command)
+#+END_SRC
+** Lisp Complete Symbol 
+#+BEGIN_SRC emacs-lisp
+(global-set-key "\M-'" 'lisp-complete-symbol)
+#+END_SRC

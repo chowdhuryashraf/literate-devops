@@ -386,6 +386,22 @@ interested in the actual code implementing the starter kit.
         (setq system-name (car (split-string system-name "\\."))))
   #+end_src
 
+- Remove Menu bar, tool bar, start up messages
+#+NAME: starter-kit-remove_unnecessary
+#+BEGIN_SRC emacs-lisp
+  (when window-system
+    (tooltip-mode -1)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1))
+  (setq inhibit-startup-message t)
+#+END_SRC
+
+- Truncate Line 
+#+NAME: starter-kit-truncate
+#+BEGIN_SRC emacs-lisp
+(setq-default truncate-lines nil)
+#+END_SRC
 ** Starter kit core
    :PROPERTIES:
    :CUSTOM_ID: starter-kit-core

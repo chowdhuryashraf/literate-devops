@@ -104,6 +104,50 @@ work flow.
 #+RESULTS:
 : org-capture
 
+** Clocking work time 
+   :PROPERTIES:
+   :CUSTOM_ID: code-block-org-clock
+   :END:
+Org mode allows you to clock the time you spend on specific tasks in a project. When you start working on an item, you can start the clock. When you stop working on that task, or when you mark the task done, the clock is stopped and the corresponding time interval is recorded. It also computes the total time spent on each subtree1 of a project. And it remembers a history or tasks recently clocked, so that you can jump quickly between a number of tasks absorbing your time.
+
+To save the clock history across Emacs sessions, use
+
+#+BEGIN_SRC emacs-lisp
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+#+END_SRC
+
+#+RESULTS:
+: org-capture
+
+** Org Agenda files
+   :PROPERTIES:
+   :CUSTOM_ID: code-block-org-agenda
+   :END:
+Capture lets you quickly store notes with little interruption of your
+work flow. 
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-files '("~/org" "~/literate-emacs/"))
+#+END_SRC
+
+#+RESULTS:
+| ~/org | ~/literate-emacs/ |
+** Closing items
+   :PROPERTIES:
+   :CUSTOM_ID: code-block-org-closing-items
+   :END:
+Capture lets you quickly store notes with little interruption of your
+work flow. 
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+;(setq org-log-done 'note)
+#+END_SRC
+
+#+RESULTS:
+: time
+
 ** The Library of Babel
    :PROPERTIES:
    :CUSTOM_ID: library-of-babel
