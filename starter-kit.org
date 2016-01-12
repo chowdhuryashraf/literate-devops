@@ -65,13 +65,12 @@ itself as =void function: foobar= errors) try M-x regen-autoloads.
 If you want to keep your regular =~/.emacs.d= in place and just launch
 a single instance using the starter kit, try the following invocation:
 #+NAME: empath
-#+BEGIN_SRC sh
-pwd
+#+BEGIN_SRC emacs-lisp :var file=""
+(expand-file-name file)
 #+END_SRC
 
 #+RESULTS: empath
-: /home/rks/literate-emacs
-
+: /usr/local/src/literate-emacs
 
 
 #+begin_src sh :var path=empath[0] :tangle emacs_starter.sh  :shebang #!/bin/bash :dir /sudo:: 
@@ -79,7 +78,7 @@ pwd
       --eval "(run-hooks 'after-init-hook)" &
 #+end_src
 
-#+BEGIN_SRC sh :var path=empath[0]   :dir /sudo::  
+#+BEGIN_SRC sh :var path=empath[0]   :dir /su:root@localhost:  
 ls -la $path/emacs_starter.sh 
 cp $path/emacs_starter.sh  /bin/em
 chmod 755 /bin/em
@@ -87,8 +86,8 @@ ls -la /bin/em
 #+END_SRC
 
 #+RESULTS:
-| -rwxrwxr-x | 1 | rks  | rks  | 151 | Jan |  6 | 03:37 | /home/rks/literate-emacs/emacs_starter.sh |
-| -rwxr-xr-x | 1 | root | root | 151 | Jan | 10 | 01:03 | /bin/em                                   |
+| -rwxr-xr-x | 1 | root | staff | 151 | Jan | 12 | 11:06 | /usr/local/src/literate-emacs/emacs_starter.sh |
+| -rwxr-xr-x | 1 | root | root  | 151 | Jan | 12 | 11:06 | /bin/em                                        |
 
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
