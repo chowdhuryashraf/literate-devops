@@ -966,3 +966,61 @@ I really like this idea, because it’s dumb to make me hit C-x C-s all the time
           (basic-save-buffer)))))
 (add-hook 'auto-save-hook 'full-auto-save)
 #+END_SRC
+** Color Theme 
+- Colur Themes 
+#+NAME: starter-kit-set-color-theme
+#+BEGIN_SRC emacs-lisp
+(require 'color-theme)
+(setq color-theme-is-global t)
+;; (color-theme-initialize)
+
+
+(load "color-theme-zenburn")
+(load "color-theme-tangotango")
+;;(load "color-theme-ujelly")
+
+
+(setq ash-color-themes (list
+  'color-theme-tangotango
+  'color-theme-zenburn
+))
+
+(defun ash-theme-set-default () ; Set the first row
+      (interactive)
+      (setq theme-current ash-color-themes)
+      (funcall (car theme-current)))
+
+(defun ash-describe-theme () ; Show the current theme
+  (interactive)
+  (message "%s" (car theme-current)))
+
+   ; Set the next theme (fixed by Chris Webber - tanks)
+(defun ash-theme-cycle ()            
+  (interactive)
+  (setq theme-current (cdr theme-current))
+  (if (null theme-current)
+      (setq theme-current ash-color-themes))
+  (funcall (car theme-current))
+  (message "%S" (car theme-current)))
+
+(setq theme-current ash-color-themes)
+(setq color-theme-is-global nil) ; Initialization
+(ash-theme-set-default)
+(global-set-key [f4] 'ash-theme-cycle)
+#+END_SRC
+
+** Keyboard Macro 
+*** f3 start 
+*** f4 end 
+*** c-x e - execute 
+*** c-x c-k SPC - debug 
+*** c-x c-k n - name exp name: abc_mac
+*** in .emacs.d - insert-kbd-macro abc_mac
+*** repeat infinate c-u 0 c-x e 
+*** recent commands c-x c-k l 
+*** Find Macro Libarary 
+M-x find-library RET kmacro
+M-x find-library RET edmacro
+* Find Libarary 
+M-x find-library RET kmacro
+M-x find-library RET edmacro

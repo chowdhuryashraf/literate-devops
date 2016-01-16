@@ -269,8 +269,7 @@ specified. See the file [[file:COPYING][COPYING]] for details.
 
 The latest version is at http://github.com/eschulte/emacs24-starter-kit/
 
-* DONE Implementation
-  DEADLINE: <2016-01-05 মঙ্গল>
+* Implementation
   :PROPERTIES:
   :CUSTOM_ID: implementation
   :END:
@@ -426,47 +425,8 @@ interested in the actual code implementing the starter kit.
 (setq-default truncate-lines nil)
 #+END_SRC
 
-- Colur Themes 
-#+NAME: starter-kit-set-color-theme
-#+BEGIN_SRC emacs-lisp
-(require 'color-theme)
-(setq color-theme-is-global t)
-;; (color-theme-initialize)
-
-
-(load "color-theme-zenburn")
-(load "color-theme-tangotango")
-;;(load "color-theme-ujelly")
-
-
-(setq ash-color-themes (list
-  'color-theme-tangotango
-  'color-theme-zenburn
-))
-
-(defun ash-theme-set-default () ; Set the first row
-      (interactive)
-      (setq theme-current ash-color-themes)
-      (funcall (car theme-current)))
-
-(defun ash-describe-theme () ; Show the current theme
-  (interactive)
-  (message "%s" (car theme-current)))
-
-   ; Set the next theme (fixed by Chris Webber - tanks)
-(defun ash-theme-cycle ()            
-  (interactive)
-  (setq theme-current (cdr theme-current))
-  (if (null theme-current)
-      (setq theme-current ash-color-themes))
-  (funcall (car theme-current))
-  (message "%S" (car theme-current)))
-
-(setq theme-current ash-color-themes)
-(setq color-theme-is-global nil) ; Initialization
-(ash-theme-set-default)
-(global-set-key [f4] 'ash-theme-cycle)
-#+END_SRC
+#+RESULTS: starter-kit-truncate
+: t
 
 ** Starter kit core
    :PROPERTIES:
