@@ -73,13 +73,13 @@ a single instance using the starter kit, try the following invocation:
 : /usr/local/src/literate-emacs
 
 *** Install in Desktop
-#+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash 
+#+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash
   emacs -q -l $path/init.el \
       --eval "(run-hooks 'after-init-hook)" &
 #+end_src
 
-#+BEGIN_SRC sh :var path=empath[0]   :dir /su:root@localhost:  
-ls -la $path/emacs_starter.sh 
+#+BEGIN_SRC sh :var path=empath[0]   :dir /su:root@localhost:
+ls -la $path/emacs_starter.sh
 cp $path/emacs_starter.sh  /bin/em
 chmod 755 /bin/em
 ls -la /bin/em
@@ -94,15 +94,15 @@ loading, so if you've having trouble loading it, make sure that file
 is not present.
 
 *** Install in Server
-#+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash 
+#+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash
   emacs -q -l $path/init.el \
-      --eval "(run-hooks 'after-init-hook)" 
+      --eval "(run-hooks 'after-init-hook)"
 #+end_src
 
 #+RESULTS:
 
-#+BEGIN_SRC sh :var path=empath[0]   :dir /su:root@localhost:  
-ls -la $path/emacs_starter.sh 
+#+BEGIN_SRC sh :var path=empath[0]   :dir /su:root@localhost:
+ls -la $path/emacs_starter.sh
 cp $path/emacs_starter.sh  /bin/em
 chmod 755 /bin/em
 ls -la /bin/em
@@ -115,6 +115,185 @@ ls -la /bin/em
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
 is not present.
+
+*** Configure Prelude
+**** clone  backup previous
+#+BEGIN_SRC sh :dir /usr/local/src :results append
+git clone git://github.com/bbatsov/prelude.git
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh
+cp ~/.emacs.d/init.el ~/literate-emacs/init_starter.el
+ls ~/literate-emacs/init_starter.el
+#+END_SRC
+
+#+RESULTS:
+: /root/literate-emacs/init_starter.el
+
+#+BEGIN_SRC sh
+mv ~/.emacs.d ~/backups
+ls ~
+#+END_SRC
+
+#+RESULTS:
+| literate-emacs |
+| org            |
+
+**** configure
+   :PROPERTIES:
+   :dir: /usr/local/src/prelude
+   :END:
+#+NAME: sample-mod
+#+BEGIN_SRC sh
+ls sample
+#+END_SRC
+
+#+RESULTS: sample-mod
+: prelude-modules.el
+
+#+RESULTS:
+: prelude-modules.el
+
+#+BEGIN_SRC sh :var file=sample-mod
+cp sample/$file .
+ls $file
+#+END_SRC
+
+#+RESULTS:
+: prelude-modules.el
+
+#+NAME: pwd
+#+BEGIN_SRC elisp :var file=""
+(expand-file-name file)
+#+END_SRC
+
+call_pwd(sample-mod) =/usr/local/src/prelude/prelude-modules.el=
+
+#+BEGIN_SRC sh
+mv ~/.emacs.d ~/backups
+ls -l .emacs.d
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh :var dr=pwd
+ln -s $dr ~/.emacs.d
+ls ~/.emacs.d
+#+END_SRC
+
+#+RESULTS:
+| CONTRIBUTING.md    |
+| core               |
+| init.el            |
+| modules            |
+| personal           |
+| prelude-modules.el |
+| README.md          |
+| sample             |
+| themes             |
+| utils              |
+| vendor             |
+
+**** Emacs Setup
+#+NAME: ealias
+#+begin_src sh
+alias emd='emacs --daemon'
+alias e='emacsclient -t'
+alias ec='emacsclient -c'
+alias vim='emacsclient -t'
+alias vi='emacsclient -t'
+export TERM=xterm-256color
+#+end_src
+
+#+BEGIN_SRC elisp :var file="~/.bashrc"
+(with-temp-buffer (insert-file-contents file) (buffer-string))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+# ~/.bashrc: executed by bash(1) for non-login shells.
+
+# Note: PS1 and umask are already set in /etc/profile. You should not
+# need this unless you want different defaults for root.
+# PS1='${debian_chroot:+($debian_chroot)}\h:\w\$ '
+# umask 022
+
+# You may uncomment the following lines if you want `ls' to be colorized:
+# export LS_OPTIONS='--color=auto'
+# eval "`dircolors`"
+# alias ls='ls $LS_OPTIONS'
+# alias ll='ls $LS_OPTIONS -l'
+# alias l='ls $LS_OPTIONS -lA'
+#
+# Some more alias to avoid making mistakes:
+# alias rm='rm -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
+###-begin-npm-completion-###
+#
+# npm command completion script
+#
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+#
+
+if type complete &>/dev/null; then
+  _npm_completion () {
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           npm completion -- "${words[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  complete -o default -F _npm_completion npm
+elif type compdef &>/dev/null; then
+  _npm_completion() {
+    local si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 npm completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _npm_completion npm
+elif type compctl &>/dev/null; then
+  _npm_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       npm completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _npm_completion npm
+fi
+###-end-npm-completion-###
+#+end_example
+
+Note that having a =~/.emacs= file might override the starter kit
+loading, so if you've having trouble loading it, make sure that file
+is not present.
+
 
 ** Structure
    :PROPERTIES:
@@ -198,7 +377,7 @@ general starter-kit updates without conflict.
      #+begin_src emacs-lisp
        (starter-kit-load "gnus" "pretty-summary")
      #+end_src
-     
+
      Finally you can load just those subsections of a file which have
      a specific tag, so to load just the two sections of
      =starter-kit-misc-recommended.org= which are tagged =visual= add
@@ -331,10 +510,10 @@ interested in the actual code implementing the starter kit.
                 ("melpa"       . "http://melpa.org/packages/")
                 ("marmalade"   . "http://marmalade-repo.org/packages/")))
         (package-initialize)
-        
+
         (defvar starter-kit-packages nil
           "Libraries that should be installed by default (currently none).")
-        
+
         (defun starter-kit-install-if-needed (&rest packages)
           "Install PACKAGES using ELPA if they are not loadable or installed locally."
           (when packages
@@ -355,10 +534,10 @@ interested in the actual code implementing the starter kit.
     configuration from within that subtree will be loaded.  If it is
     not an id then it will be interpreted as a tag, and only subtrees
     marked with the given tag will be loaded.
-    
+
     For example, to load all of starter-kit-lisp.org simply
     add (starter-kit-load \"lisp\") to your configuration.
-    
+
     To load only the 'window-system' config from
     starter-kit-misc-recommended.org add
      (starter-kit-load \"misc-recommended\" \"window-system\")
@@ -419,7 +598,7 @@ interested in the actual code implementing the starter kit.
   (setq inhibit-startup-message t)
 #+END_SRC
 
-- Truncate Line 
+- Truncate Line
 #+NAME: starter-kit-truncate
 #+BEGIN_SRC emacs-lisp
 (setq-default truncate-lines nil)
@@ -455,11 +634,11 @@ everyone using the starter kit.
   #+begin_src emacs-lisp
   (starter-kit-load "starter-kit-registers.org")
   #+end_src
-  
+
   #+RESULTS:
   : Loaded /home/rks/literalemacs/starter-kit-registers.el
 - Org mode in [[starter-kit-org.org]]
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
   (starter-kit-load "starter-kit-org.org")
 #+END_SRC
 

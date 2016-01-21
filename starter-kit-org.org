@@ -59,7 +59,7 @@ to activate more languages using the customize interface for the
 `=org-babel-load-languages=' variable, or with an elisp form like the
 one below.  The customize interface of `=org-babel-load-languages='
 contains an up to date list of the currently supported languages.
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
@@ -71,8 +71,8 @@ contains an up to date list of the currently supported languages.
 
 You are encouraged to add the following to your personal configuration
 although it is not added by default as a security precaution.
-#+begin_src emacs-lisp 
-  (setq org-confirm-babel-evaluate nil)
+#+begin_src emacs-lisp
+OA  (setq org-confirm-babel-evaluate nil)
 #+end_src
 
 ** Code block fontification
@@ -89,12 +89,12 @@ much more like reading and editing of code using its major mode.
   (setq org-src-tab-acts-natively t)
 #+end_src
 
-** Org Capture 
+** Org Capture
    :PROPERTIES:
    :CUSTOM_ID: code-block-org-capture
    :END:
 Capture lets you quickly store notes with little interruption of your
-work flow. 
+work flow.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-default-notes-file (concat org-directory "/notes.org"))
@@ -104,7 +104,7 @@ work flow.
 #+RESULTS:
 : org-capture
 
-** Clocking work time 
+** Clocking work time
    :PROPERTIES:
    :CUSTOM_ID: code-block-org-clock
    :END:
@@ -125,7 +125,7 @@ To save the clock history across Emacs sessions, use
    :CUSTOM_ID: code-block-org-agenda
    :END:
 Capture lets you quickly store notes with little interruption of your
-work flow. 
+work flow.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-files '("~/org" "~/literate-emacs/"))
@@ -138,7 +138,7 @@ work flow.
    :CUSTOM_ID: code-block-org-closing-items
    :END:
 Capture lets you quickly store notes with little interruption of your
-work flow. 
+work flow.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-log-done 'time)
