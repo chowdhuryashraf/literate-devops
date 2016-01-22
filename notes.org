@@ -63,3 +63,4 @@ if [ $counter -eq 1 ] then; echo "true";
    [2016-01-21 Thu]
    [[file:/usr/local/src/pipeserver/setup.org::*check_pipeserver_running][check_pipeserver_running]]
 ** TODO tut r1930 5445
+#+call: echo
