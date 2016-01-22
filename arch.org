@@ -55,7 +55,7 @@ partitions:
 #+BEGIN_SRC sh
  mkfs.ext4 /dev/sda5
 <s#+END_SRC
-* swapon /dev/sda6
+** swapon /dev/sda6
 
 Now we install the base system onto /mnt. We’ll first vi /etc/pacman.d/mirrorlist and leave only the best mirrors. I left all the ones until 1.5 since those included a
 lot of germany and european mirrors, and removed all US mirrors. It’s important to note that, since I was on a wired connection, the next step works automatically for
@@ -64,14 +64,13 @@ shme. I haven’t tried this on a wireless connection but the documentation expl
 
 Let’s mount the partitions. The partition which is going to be / should be mounted on /mnt.
 
-* mount /dev/sda5 /mnt
+** mount /dev/sda5 /mnt
 u* pacstrap /mnt base
 
 This part takes a little bit. When that’s done it’s time to switch to the newly installed system and finish setting it up:
 
-* genfstab -p -L /mnt >> /mnt/etc/fstab
-* arch-chroot /mnt
-* bash
+** arch-chroot /mnt
+* genfstab -p -L /mnt >> /mnt/etc/fstab* bash
 
 This part of the configuration will surely be different for you but my examples will indicate what you should be doing on your computer:
 
