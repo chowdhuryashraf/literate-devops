@@ -5,6 +5,8 @@
 ;; This is the first thing to get loaded.
 ;;
 
+;; load Org-mode from source when the ORG_HOME environment variable is set
+;; load the starter kit from the `after-init-hook' so all packages are loaded
 (add-hook 'after-init-hook
  `(lambda ()
     ;; remember this directory
