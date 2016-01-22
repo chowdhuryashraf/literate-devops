@@ -1,0 +1,65 @@
+* Tasks
+** TODO [[Automating Releases with semantic-release][Automating Releases with semantic-release]]
+   CLOCK: [2016-01-12 মঙ্গল 21:18]--[2016-01-13 Wed 00:18] =>  3:00
+   [[file:~/literate-emacs/starter-kit-org.org]]
+*** git push http to git workflow
+** TODO Practice Org mode
+[[https://eschulte.github.io/org-scraps/][scrap examples]]
+[[http://emacs-doctor.com/learn-emacs-lisp-in-15-minutes.html][learn emacs lisp in 15 minutes]]
+   [2016-01-13 Wed]
+   [[file:/usr/local/src/microlibrary/friends-aneesha/setup.org::*Add%20npm%20user][Add npm user]]
+** TODO Saving a macro
+Emacs provides a number of functions to save macros for use in future sessions:
+
+M-x kmacro-name-last-macro, bound to C-x C-k n, gives a command name to the last defined macro. As explained above, the macro can then be called by typing M-x name-of-the-macro.
+   [2016-01-18 Mon]
+   [[file:/usr/local/src/microlibrary/friends-aneesha/setup.org::*Prepare%20Moudle%20Name%20%3D%20directory%20name][Prepare Moudle Name = directory name]]
+** TODO create org sh
+#+BEGIN_SRC elisp
+(fset 'orgsh
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("<s	sh" 0 "%d")) arg)))
+(define-key global-map "\C-c\C-xs" 'orgsh)
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+;; Original keys: < s TAB s h C-n
+
+Command: last-kbd-macro
+Key: none
+
+Macro:
+
+<			;; self-insert-command
+s			;; self-insert-command
+TAB			;; org-cycle
+s			;; self-insert-command
+h			;; self-insert-command
+C-n			;; next-line
+#+END_EXAMPLE
+   [2016-01-18 Mon]
+   [[file:/usr/local/src/microlibrary/friends-aneesha/setup.org::*Prepare%20Moudle%20Name%20%3D%20directory%20name][Prepare Moudle Name = directory name]]
+** TODO find command with cmdaync
+#+name: finds
+#+BEGIN_SRC sh :var dir="/" file="pandoc\\*" :noweb yes
+echo "find $dir -name  $file"
+#+END_SRC
+
+#+RESULTS: find
+: find / -name  pandoc\*
+#+name: find
+#+BEGIN_SRC :var dir="/" file="pandoc\\*" :noweb yes
+<<finds>>
+<<cmdaync>>
+#+END_SRC
+
+
+   [2016-01-19 Tue]
+   [[file:/usr/local/src/microlibrary/friends-aneesha/setup.org::*Install%20Pandoc][Install Pandoc]]
+** TODO test Inline if
+#+BEGIN_SRC sh
+if [ $counter -eq 1 ] then; echo "true";
+#+END_SRC
+
+   [2016-01-21 Thu]
+   [[file:/usr/local/src/pipeserver/setup.org::*check_pipeserver_running][check_pipeserver_running]]
+** TODO tut r1930 5445
