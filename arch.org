@@ -74,7 +74,9 @@ This part takes a little bit. When that’s done it’s time to switch to the ne
 
 This part of the configuration will surely be different for you but my examples will indicate what you should be doing on your computer:
 
-* echo Hamming > /etc/hostname
+#+BEGIN_SRC sh
+echo archnua > /etc/hostname
+#+END_SRC 
 * ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 * vi /etc/locale.gen and uncommented en_GB entries and then run locale-gen
 * locale > /etc/locale.conf
