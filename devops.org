@@ -1,24 +1,15 @@
-* Emacs Setups
+* File directory handleing
+** pwd
+#+NAME: pwd
+#+BEGIN_SRC elisp :var file=""
+(expand-file-name file)
+#+END_SRC
 ** module
-#+call: readme()
-
-#+RESULTS:
-: nil
-
 #+NAME: module
 #+BEGIN_SRC elisp  :export none
   (last
    (split-string
     (replace-regexp-in-string "/" " "   (expand-file-name "")) ))
-#+END_SRC
-** bages
-#+NAME: bages
-#+BEGIN_SRC  sh
-[![travis build](https://img.shields.io/travis/chowdhuryashraf/friends-aneesha.svg)](https://travis-ci.org/chowdhuryashraf/friends-aneesha)
-[![codecov coverage](https://img.shields.io/codecov/c/github/chowdhuryashraf/friends-aneesha.svg)](https://codecov.io/github/chowdhuryashraf/friends-aneesha)
-[![version](https://img.shields.io/npm/v/friends-aneesha.svg)](https://www.npmjs.com/package/friends-aneesha)
-[![downloads](https://img.shields.io/npm/dm/friends-aneesha.svg)](https://www.npmjs.com/package/friends-aneesha)
-[![MIT License](https://img.shields.io/npm/l/friends-aneesha.svg)](https://www.npmjs.com/package/friends-aneesha)
 #+END_SRC
 
 ** Keyboard Macro for diff
@@ -55,8 +46,8 @@ y			;; self-insert-command
    :END:
 #+NAME: cmdaync
 #+BEGIN_SRC sh :var cmd="" :var mod=module[0] :noweb yes
-<<check_pipeserver_running>>
-echo  $cmd   > $pipe
+  <<check_pipeserver_running>>
+  echo  $cmd   > $pipe
 #+END_SRC
 
 #+RESULTS:
@@ -65,19 +56,15 @@ echo  $cmd   > $pipe
 *** check_pipeserver_running
 #+NAME: check_pipeserver_running
 #+BEGIN_SRC sh
-pipe="/tmp/"$mod
-[ ! -p $pipe ] && exit 1 || echo "command $DT is sended to $pipe"
+  pipe="/tmp/"$mod
+  [ ! -p $pipe ] && exit 1 || echo "command $DT is sended to $pipe"
 #+END_SRC
 
 #+RESULTS: check_pipeserver_running
 : command  is sended to /tmp/friends-aneesha
 
-*** test Inline if
-#+BEGIN_SRC sh
-if [ $counter -eq 1 ] then; echo "true";
-#+END_SRC
-
-** file contents
+* file contents
+** Write string
 #+NAME: fwrite
 #+BEGIN_SRC elisp :var filename=""  :var s=""
     (with-temp-buffer
@@ -85,78 +72,47 @@ if [ $counter -eq 1 ] then; echo "true";
       (when (file-writable-p filename)
          (write-region (point-min) (point-max) filename nil))))
 #+END_SRC
-
-
-*** Prepare Test
+** Output file to string
 #+name: fread
 #+BEGIN_SRC elisp :var filename=""
     (with-temp-buffer
       (insert-file-contents filename)
-      (buffer-string)))
+      (buffer-string))
 #+END_SRC
 
 #+RESULTS:
 : # friends-aneesha
 
-** Install Pandoc
-#+call: cmdaync("apt-get install haskell-platform haskell-platform-doc")
-#+call: cmdaync("cabal update && cabal install cabal-install ")
-#+call: cmdaync("cabal install ghc-mod hoogle hlint pointfree")
-#+call: cmdaync("cabal install pandoc")
-
-#+RESULTS:
-: command  is sended to /tmp/friends-aneesha
-
-#+call: cmdaync("find / -name  pandoc\\*")
-
-#+RESULTS:
-: command  is sended to /tmp/friends-aneesha
-
-** Pandoc org to markdown_github
-#+call: fwrite("README.md", readme())
-
-#+RESULTS:
-: nil
-
-#+NAME: readme
-#+BEGIN_SRC sh :var src="setup.org" :var dst="README.md" :noweb yes :post bages()
-/root/.cabal/bin/pandoc --from org --to markdown_github -o $dst $src
-#+END_SRC
-
-#+name: bagesbuf
-#+BEGIN_SRC elisp :var buf=write_bages() :var mod=module[0] :var end=fread("README.md")
-(progn
-(switch-to-buffer-other-window "*README.md*")
-(erase-buffer)
-(insert (concat  buf  "\n" mod "\n" "===============" "\n" end))
-(other-window 1))
-#+END_SRC
-
-#+RESULTS: bagesbuf
-
-#+RESULTS: bages
-
-
-#+NAME: write_bages
-#+BEGIN_SRC sh :noweb yes
-write_bages= <<begin>>
-<<bages>>
-<<end>>
-#+END_SRC
-
-#+RESULTS: write_bages
-
-#+NAME: begin
+** bash quote
+#+NAME: beginsh
 #+BEGIN_SRC sh  :noweb yes :results verbatim
 echo $(cat << 'BBL_START'
 #+END_SRC
 
-#+NAME: end
+#+NAME: endsh
 #+BEGIN_SRC sh
 BBL_START
 )
 #+END_SRC
 
+** temp buffer
+#+name: tmpbuf
+#+BEGIN_SRC elisp :var buf="" :var name="*tmp*"
+(progn
+(switch-to-buffer-other-window name)
+(erase-buffer)
+(insert buf)
+(other-window 1))
+#+END_SRC
+
+#+RESULTS: tmpbuf
+
+* Setup.org
+** Pandoc org to markdown_github
+#+NAME: readme
+#+BEGIN_SRC sh :var src="setup.org" :var dst="README.md" :noweb yes :post fwrite(bagesbuf())
+/root/.cabal/bin/pandoc --from org --to markdown_github -o $dst $src
+#+END_SRC
 ** run git macro
 #+BEGIN_SRC elisp
 (fset 'npmcommit
@@ -205,3 +161,31 @@ C-a			;; org-beginning-of-line
 C-c C-c			;; org-ctrl-c-ctrl-c
 
 #+END_EXAMPLE
+
+** bages
+*** Contnts
+#+NAME: bages
+#+BEGIN_SRC  python
+[![travis build](https://img.shields.io/travis/chowdhuryashraf/friends-aneesha.svg)](https://travis-ci.org/chowdhuryashraf/friends-aneesha)
+[![codecov coverage](https://img.shields.io/codecov/c/github/chowdhuryashraf/friends-aneesha.svg)](https://codecov.io/github/chowdhuryashraf/friends-aneesha)
+[![version](https://img.shields.io/npm/v/friends-aneesha.svg)](https://www.npmjs.com/package/friends-aneesha)
+[![downloads](https://img.shields.io/npm/dm/friends-aneesha.svg)](https://www.npmjs.com/package/friends-aneesha)
+[![MIT License](https://img.shields.io/npm/l/friends-aneesha.svg)](https://www.npmjs.com/package/friends-aneesha)
+#+END_SRC
+
+*** Add Contents
+#+name: bagesbuf
+#+BEGIN_SRC elisp :var buf=write_bages() :var mod=module[0] :var end=fread("README.md")
+(concat  buf  "\n" mod "\n" "===============" "\n" end)
+#+END_SRC
+
+#+RESULTS: bagesbuf
+
+#+NAME: write_bages
+#+BEGIN_SRC sh :noweb yes
+write_bages= <<beginsh>>
+<<bages>>
+<<endsh>>
+#+END_SRC
+
+#+RESULTS: write_bages

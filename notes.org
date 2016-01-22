@@ -63,4 +63,11 @@ if [ $counter -eq 1 ] then; echo "true";
    [2016-01-21 Thu]
    [[file:/usr/local/src/pipeserver/setup.org::*check_pipeserver_running][check_pipeserver_running]]
 ** TODO tut r1930 5445
-#+call: echo
+** TODO lisp code
+     ,(unless (and (getenv "ORG_HOME")
+                  (file-directory-p (expand-file-name "lisp"
+                                                      (getenv "ORG_HOME"))))
+       '(require 'org))
+
+   [2016-01-21 Thu]
+   [[file:/usr/local/src/literate-devops/init.el::%3B%3B%20load%20up%20the%20starter%20kit][file:/usr/local/src/literate-devops/init.el::;; load up the starter kit]]

@@ -2,6 +2,7 @@
 #+OPTIONS: toc:2 num:nil ^:nil
 * Org
 ** Code blocks
+*** Load Language
    :PROPERTIES:
    :CUSTOM_ID: babel
    :END:
@@ -18,6 +19,10 @@ contains an up to date list of the currently supported languages.
      (sh . t)
      (python . t)))
 #+end_src
+*** default executable
+   :PROPERTIES:
+   :CUSTOM_ID: babel_eval_yes
+   :END:
 
 You are encouraged to add the following to your personal configuration
 although it is not added by default as a security precaution.
@@ -38,6 +43,11 @@ much more like reading and editing of code using its major mode.
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
 #+end_src
+
+** Load Babel Libraries
+#+BEGIN_SRC sh elisp
+(org-babel-lob-ingest (expand-file-name "devops.org"))
+#+END_SRC
 
 * Installation
    :PROPERTIES:
@@ -67,21 +77,47 @@ itself as =void function: foobar= errors) try M-x regen-autoloads.
 
 If you want to keep your regular =~/.emacs.d= in place and just launch
 a single instance using the starter kit, try the following invocation:
-*** Path
-#+NAME: empath
-#+BEGIN_SRC emacs-lisp :var file=""
-(expand-file-name file)
+*** [[~/org][org directory]] backup
+#+BEGIN_SRC sh
+mv ~/org ~/backups
+ls ~
 #+END_SRC
 
-#+RESULTS: empath
-: /usr/local/src/literate-emacs
+#+RESULTS:
+| backups |
+| org     |
 
-*** Install in Desktop
+*** Link [[~/org][org directory]]
+#+BEGIN_SRC sh :var path=pwd()
+ln -s $path ~/org
+ls ~/org
+#+END_SRC
+
+#+RESULTS:
+| bookmarks                        |
+| devops.org                       |
+| git.org                          |
+| init.el                          |
+| job                              |
+| learn.org                        |
+| linux.org                        |
+| notes.org                        |
+| ssh                              |
+| starter-kit-bindings.org         |
+| starter-kit-defuns.org           |
+| starter-kit-misc.org             |
+| starter-kit-misc-recommended.org |
+| starter-kit.org                  |
+| starter-kit-org.org              |
+| usb                              |
+
+*** Tangle Code Block
 #+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash
   emacs -q -l $path/init.el \
       --eval "(run-hooks 'after-init-hook)" &
 #+end_src
 
+*** Install in Desktop
 #+BEGIN_SRC sh :var path=empath[0]   :dir /su:root@localhost:
 ls -la $path/emacs_starter.sh
 cp $path/emacs_starter.sh  /bin/em
@@ -89,22 +125,11 @@ chmod 755 /bin/em
 ls -la /bin/em
 #+END_SRC
 
-#+RESULTS:
-| -rwxr-xr-x | 1 | root | staff | 146 | Jan | 12 | 13:54 | /root/literate-emacs/emacs_starter.sh |
-| -rwxr-xr-x | 1 | root | root  | 146 | Jan | 12 | 13:54 | /bin/em                               |
-
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
 is not present.
 
 *** Install in Server
-#+begin_src sh :var path=empath[0]  :tangle emacs_starter.sh  :shebang #!/bin/bash
-  emacs -q -l $path/init.el \
-      --eval "(run-hooks 'after-init-hook)"
-#+end_src
-
-#+RESULTS:
-
 #+BEGIN_SRC sh :var path=empath[0]
 ls -la $path/emacs_starter.sh
 cp $path/emacs_starter.sh  /bin/em
@@ -112,9 +137,6 @@ chmod 755 /bin/em
 ls -la /bin/em
 #+END_SRC
 
-#+RESULTS:
-| -rwxr-xr-x | 1 | root | root | 298 | Jan | 21 | 21:23 | /usr/local/src/literate-emacs/emacs_starter.sh |
-| -rwxr-xr-x | 1 | root | root | 298 | Jan | 21 | 21:23 | /bin/em                                        |
 
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
@@ -122,33 +144,19 @@ is not present.
 
 *** Configure Prelude
 **** clone  backup previous
-#+BEGIN_SRC sh :dir /usr/local/src :results append
+#+BEGIN_SRC sh :dir /usr/local/src :results replace
 git clone git://github.com/bbatsov/prelude.git
 #+END_SRC
-
-#+RESULTS:
-
-#+BEGIN_SRC sh
-cp ~/.emacs.d/init.el ~/literate-emacs/init_starter.el
-ls ~/literate-emacs/init_starter.el
-#+END_SRC
-
-#+RESULTS:
-: /root/literate-emacs/init_starter.el
-
-#+BEGIN_SRC sh
-mv ~/.emacs.d ~/backups
-ls ~
-#+END_SRC
-
-#+RESULTS:
-| literate-emacs |
-| org            |
-
 **** configure
    :PROPERTIES:
    :dir: /usr/local/src/prelude
    :END:
+
+#+BEGIN_SRC sh :var file=sample-mod
+cp sample/$file .
+ls $file
+#+END_SRC
+
 #+NAME: sample-mod
 #+BEGIN_SRC sh
 ls sample
@@ -156,32 +164,12 @@ ls sample
 
 #+RESULTS: sample-mod
 : prelude-modules.el
-
-#+RESULTS:
-: prelude-modules.el
-
-#+BEGIN_SRC sh :var file=sample-mod
-cp sample/$file .
-ls $file
-#+END_SRC
-
-#+RESULTS:
-: prelude-modules.el
-
-#+NAME: pwd
-#+BEGIN_SRC elisp :var file=""
-(expand-file-name file)
-#+END_SRC
-
-call_pwd(sample-mod) =/usr/local/src/prelude/prelude-modules.el=
-
+**** backup [[~/.emacs.d][emacs.d]]
 #+BEGIN_SRC sh
 mv ~/.emacs.d ~/backups
 ls -l .emacs.d
 #+END_SRC
-
-#+RESULTS:
-
+**** link prelude
 #+BEGIN_SRC sh :var dr=pwd
 ln -s $dr ~/.emacs.d
 ls ~/.emacs.d
