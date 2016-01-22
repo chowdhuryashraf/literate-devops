@@ -785,9 +785,9 @@ git --version
 * DONE eccential python install
   CLOSED: [2016-01-03 রবি 06:48]
 #+BEGIN_SRC sh :dir /sudo::
-#sudo apt-get install python-pip python-dev build-essential
-sudo pip install --upgrade pip
-sudo pip install --upgrade virtualenv
+  #sudo apt-get install python-pip python-dev build-essential
+  sudo pip install --upgrade pip
+  sudo pip install --upgrade virtualenv
 #+END_SRC
 
 #+RESULTS:
@@ -865,5 +865,6 @@ sudo sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian '$(lsb_re
 
 #+call: cmdaync("find / -name  pandoc\\*")
 
-#+RESULTS:
-: command  is sended to /tmp/friends-aneesha
+#+BEGIN_SRC sh
+ls -l
+#+END_SRC

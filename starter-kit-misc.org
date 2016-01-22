@@ -6,15 +6,15 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 * Starter Kit Misc
 Things that don't fit anywhere else.
 
-** Check Dependencies
+# ** Check Dependencies
 
-Determine whether required packages are installed. If not, use ELPA to
-install them. Other dependencies are provided by Emacs 24.
-#+begin_src emacs-lisp
-  (starter-kit-install-if-needed 'magit)
-  (global-set-key (kbd "C-x g") 'magit-status)
-  (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
-#+end_src
+# Determine whether required packages are installed. If not, use ELPA to
+# install them. Other dependencies are provided by Emacs 24.
+# #+begin_src emacs-lisp
+#   (starter-kit-install-if-needed 'magit)
+#   (global-set-key (kbd "C-x g") 'magit-status)
+#   (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+# #+end_src
 
 ** Color Themes
 Emacs24 has build in support for saving and loading themes.

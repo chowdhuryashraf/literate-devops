@@ -65,7 +65,7 @@ work flow.
 #+RESULTS:
 : org-capture
 
-** Clocking work time
+**  Clocking work time
    :PROPERTIES:
    :CUSTOM_ID: code-block-org-clock
    :END:
@@ -89,7 +89,7 @@ Capture lets you quickly store notes with little interruption of your
 work flow.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-agenda-files '("~/org" "~/literate-emacs/"))
+(setq org-agenda-files '("~/org" ))
 #+END_SRC
 
 #+RESULTS:
