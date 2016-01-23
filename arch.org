@@ -41,7 +41,8 @@ instalation for example.
   Oh and do write down what is each partition, i.e., /dev/sda5 is /, /dev/sda6 is /boot, etc.
 - Definitelly do this with the instructions printed or opened on another laptop so that you can search for help if you get stuck.
 
-* TODO The base system
+* DONE The base system
+  CLOSED: [2016-01-24 Sun 03:13]
 
 The CD can be downloaded from Arch linux downloads page. Partition your disk, burn Arch into a CD and boot into it. You’ll have a menu at boot time and then you’ll be
 logged in as root in a prompt.
@@ -92,7 +93,8 @@ This part takes a little bit. When that’s done it’s time to switch to the ne
 arch-chroot /mnt
 #+END_SRC
 
-** TODO Generate fstab
+** DONE Generate fstab
+   CLOSED: [2016-01-24 Sun 03:13]
 #+BEGIN_SRC sh
 genfstab -p -L /mnt >> /mnt/etc/fstab
 #+END_SRC
