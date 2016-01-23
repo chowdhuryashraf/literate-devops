@@ -950,8 +950,17 @@ and a background image. Nothing more.
 Let’s edit ~/.xmonad/xmonad.hs and add the following Haskell code
 (remember to replace my references to /home/luis with your home directory):
 
+
+#+name: rootxmo
+#+BEGIN_SRC elisp :dir ~
+(expand-file-name ".xmobarrc")
+#+END_SRC
+
+#+RESULTS:
+: /root/.xmobarrc
+
 #+NAME: xmonadcode
-#+BEGIN_SRC haskell
+#+BEGIN_SRC haskell :tangle ~/.xmonad/xmonad.hs :noweb yes :mkdirp yes
 import XMonad
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
@@ -959,7 +968,7 @@ import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
 main = do
-xmproc <- spawnPipe "/usr/bin/xmobar {home}"
+xmproc <- spawnPipe "/usr/bin/xmobar <<rootxmo()>>"
     xmonad $ defaultConfig
     { manageHook = manageDocks <+> manageHook defaultConfig
     , layoutHook = avoidStruts  $  layoutHook defaultConfig
@@ -972,7 +981,7 @@ xmproc <- spawnPipe "/usr/bin/xmobar {home}"
 
 ***  ~/.xmobarrc
 #+NAME: xmobar
-#+BEGIN_SRC sh
+#+BEGIN_SRC sh :tangle ~/.xmobarrc
 Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
     , bgColor = "black"
     , fgColor = "grey"
@@ -992,7 +1001,7 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
 Finally, find an image you like for background (I’m currently using this one), download it and edit you ~/.xinitrc:
 
 #+NAME: xinit
-#+BEGIN_SRC sh
+#+BEGIN_SRC sh :tangle ~/.xinitrc
 #!/bin/sh
 #
 # ~/.xinitrc
