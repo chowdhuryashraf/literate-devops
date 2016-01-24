@@ -44,9 +44,13 @@ much more like reading and editing of code using its major mode.
   (setq org-src-tab-acts-natively t)
 #+end_src
 
-** Load Babel Libraries
+** TODO Load Babel Libraries
+   :PROPERTIES:
+   :CUSTOM_ID: code-block-org-devops
+   :END:
+
 #+BEGIN_SRC elisp
-(org-babel-lob-ingest (expand-file-name "devops.org"))
+(org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
 #+END_SRC
 
 * Installation

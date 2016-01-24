@@ -1,3 +1,4 @@
+#+SEQ_TODO: TODO OPTIONAL TEST DONE
 * Sanity with Arch Linux and xmonad
 
 In a world where most Linux users revolve around Ubuntu and desktop environments choices (Gnome vs KDE vs …), I’m feeling more and more attracted to something simpler
@@ -40,12 +41,13 @@ instalation for example.
   Oh and do write down what is each partition, i.e., /dev/sda5 is /, /dev/sda6 is /boot, etc.
 - Definitelly do this with the instructions printed or opened on another laptop so that you can search for help if you get stuck.
 
-* The base system
+* DONE The base system
+  CLOSED: [2016-01-24 Sun 03:13]
 
 The CD can be downloaded from Arch linux downloads page. Partition your disk, burn Arch into a CD and boot into it. You’ll have a menu at boot time and then you’ll be
 logged in as root in a prompt.
 
-** Activate the keymap you want if you don’t want US english. In my case, for Portuguese:
+** OPTIONAL Activate the keymap you want if you don’t want US english. In my case, for Portuguese:
 #+BEGIN_SRC sh
  loadkeys /usr/share/kbd/keymaps/i386/qwerty/pt-latin9.map.gz
 #+END_SRC
@@ -55,7 +57,8 @@ partitions:
 #+BEGIN_SRC sh
  mkfs.ext4 /dev/sda5
 #+END_SRC
-** Swap
+** DONE Swap
+   CLOSED: [2016-01-24 Sun 02:44]
 #+BEGIN_SRC
  swapon /dev/sda6
 #+END_SRC
@@ -72,7 +75,8 @@ on a wireless connection but the documentation explains how to do it.
  mkswap /dev/sda6
 #+END_SRC
 
-** Monut
+** DONE Monut
+   CLOSED: [2016-01-24 Sun 02:45]
 
 Let’s mount the partitions. The partition which is going to be / should be mounted on /mnt.
 
@@ -83,19 +87,22 @@ mount /dev/sda5 /mnt
 
 This part takes a little bit. When that’s done it’s time to switch to the newly installed system and finish setting it up:
 
-** chrook
+** DONE chrook
+   CLOSED: [2016-01-24 Sun 02:45]
 #+BEGIN_SRC sh
 arch-chroot /mnt
 #+END_SRC
 
-** Generate fstab
+** DONE Generate fstab
+   CLOSED: [2016-01-24 Sun 03:13]
 #+BEGIN_SRC sh
 genfstab -p -L /mnt >> /mnt/etc/fstab
 #+END_SRC
 
 * Configaring things
 This part of the configuration will surely be different for you but my examples will indicate what you should be doing on your computer:
-** Host
+** DONE Host
+   CLOSED: [2016-01-24 Sun 02:45]
 #+BEGIN_SRC sh
 echo archnua > /etc/hostname
 #+END_SRC
@@ -106,15 +113,17 @@ echo archnua > /etc/hostname
 #+RESULTS:
 : archnua
 
-** Timezone
+** DONE Timezone
+   CLOSED: [2016-01-24 Sun 02:45]
 #+BEGIN_SRC sh
 ln -sf /usr/share/zoneinfo/Asia/Dhaka  /etc/localtime
 #+END_SRC
 
 #+RESULTS:
 
-** Keyboard (US)
- /etc/locale.gen and uncommented en_GB entries and then run locale-gen
+** DONE Keyboard (US)
+   CLOSED: [2016-01-24 Sun 02:46]
+- /etc/locale.gen and uncommented en_GB entries and then run locale-gen
 #+BEGIN_SRC elisp :var filename="/etc/locale.gen")
   (with-temp-buffer
     (insert-file-contents filename)
@@ -614,6 +623,7 @@ en_US ISO-8859-1
 #zu_ZA ISO-8859-1
 #+end_example
 
+- locale-gen
 
 #+BEGIN_SRC sh
 locale-gen
@@ -625,6 +635,8 @@ locale-gen
 | en_US.UTF-8...      | done       |
 | en_US.ISO-8859-1... | done       |
 | Generation          | complete.  |
+
+- locale.conf
 
 #+BEGIN_SRC sh
  locale > /etc/locale.conf
@@ -653,9 +665,10 @@ LC_IDENTIFICATION="en_US.UTF-8"
 LC_ALL=
 #+end_example
 
-** TODO KEYMAP
+** OPTIONAL  KEYMAP
  vi /etc/vconsole.conf and add KEYMAP=pt-latin9 and FONT=Lat2-Terminus16
-** HW Clock
+** DONE HW Clock
+   CLOSED: [2016-01-24 Sun 02:48]
 #+BEGIN_SRC sh
 hwclock --systohc --localtime
 #+END_SRC
@@ -663,20 +676,21 @@ hwclock --systohc --localtime
 #+RESULTS:
 
 #+BEGIN_SRC sh
-date%
+date
 #+END_SRC
 
 #+RESULTS:
 : Sat Jan 23 17:21:05 BDT 2016
 
-** DHCP
+** TEST DHCP
 #+BEGIN_SRC sh
 systemctl enable dhcpcd.service
 #+END_SRC
 
 #+RESULTS:
 
-** Image Creation and activation
+** DONE Image Creation and activation
+   CLOSED: [2016-01-24 Sun 02:49]
 #+BEGIN_SRC sh
 mkinitcpio -p linux
 #+END_SRC
@@ -710,29 +724,42 @@ mkinitcpio -p linux
 | ==> | Creating   | gzip-compressed     | initcpio     | image:               | /boot/initramfs-linux-fallback.img |                                    |    |            |
 | ==> | Image      | generation          | successful   |                      |                                    |                                    |    |            |
 
-* Grub Loading
+* DONE Grub Loading
+  CLOSED: [2016-01-24 Sun 02:56]
  Now it’s time to install the boot loader. This will definitelly be different for you if you decide to put GRUB on the beggining of your disk. In my case, it’s in the
 beggining of sda5 since Windows won’t cope well with it and for that I had to do some more magic:
-** Install Grub
+** DONE Install Grub
+   CLOSED: [2016-01-24 Sun 02:49]
+*** OPTIONAL chattr remove img
+#+BEGIN_SRC sh
+chattr -i /boot/grub/i386-pc/core.img
+#+END_SRC
+
+#+RESULTS:
+*** DONE Install
+    CLOSED: [2016-01-24 Sun 02:51]
 #+call: cmdaync("pacman -S grub")
 
 #+RESULTS:
 | grub.cfg         |
 | grub.cfg.example |
-
+*** DONE grub install
+    CLOSED: [2016-01-24 Sun 02:52]
 #+BEGIN_SRC sh
  grub-install --target=i386-pc --recheck --force /dev/sda
 #+END_SRC
 
 #+RESULTS:
-
+*** DONE chattr add img
+    CLOSED: [2016-01-24 Sun 02:52]
 #+BEGIN_SRC sh
 chattr +i /boot/grub/i386-pc/core.img
 #+END_SRC
 
 #+RESULTS:
 
-
+*** DONE grub mkconfig
+    CLOSED: [2016-01-24 Sun 02:52]
 #+BEGIN_SRC sh
  grub-mkconfig -o /boot/grub/grub.cfg
 #+END_SRC
@@ -743,8 +770,12 @@ Finally we give a password to root, exit bash and the chroot shell, unmount the 
 
 * Fish and adding a user
 Let’s start with a few basics, like not using root for everything:
+** DONE Install sudo
+   CLOSED: [2016-01-24 Sun 02:54]
+#+BEGIN_SRC sh
+ pacman -S sudo
+#+END_SRC
 
-** pacman -S sudo
 #+BEGIN_SRC sh
 which sudo
 #+END_SRC
@@ -752,8 +783,13 @@ which sudo
 #+RESULTS:
 : /usr/bin/sudo
 
-** visudo and uncomment the wheel group line :(
-** pacman -S fish python
+** TODO visudo and uncomment the wheel group line :(
+** DONE install fish
+   CLOSED: [2016-01-24 Sun 02:55]
+#+BEGIN_SRC sh
+pacman -S fish python
+#+END_SRC
+*** Configure fish
 Let’s get Fish as well, so that we can define it as the shell for our new user:
 #+BEGIN_SRC sh
  chsh -s /usr/bin/fish
@@ -762,33 +798,32 @@ Let’s get Fish as well, so that we can define it as the shell for our new user
 #+RESULTS:
 | Changing | shell    | for | root. |
 | Shell    | changed. |     |       |
-
+** TEST Add User
 #+BEGIN_SRC sh
  useradd --shell /usr/bin/fish --create-home -m -G wheel luis
 #+END_SRC
 
 #+RESULTS:
 
-** passwd luis and set a new password
-
-* nVIDIA
+** TEST set passwd
+#+BEGIN_SRC sh
+passwd luis
+#+END_SRC
+* OPTIONAL nVIDIA
 We can check that the nVIDIA driver works ok even without having X Windows, so let’s do that:
 ** install
 #+BEGIN_SRC sh
-
-#+END_SRC
 pacman -S nvidia
-
-* Reset
-#+BEGIN_SRC sh
- systemctl reboot
- passwd
- exit
- exit
- umount /mnt
- systemctl reboot
 #+END_SRC
-* Fix Resulation
+
+* TODO Reset
+- passwd
+- exit
+- exit
+- umount /mnt
+- systemctl reboot
+
+* TODO Fix Resulation
 The console will now show up in 640x480 resolution so let’s change that to something nicer. For that we need to know what resolutions our graphics card can handle and
 for that we need a tool called hwinfo
 **  hwinfo and fix framebuffer
@@ -862,21 +897,23 @@ Config Status: cfg=new, avail=yes, need=no, active=unknown
 
 We’ll be installing a window manager, as opposed to a full desktop environment. It’s a good idea to understand the differences between the two. For me, the main reason
 to go for a window manager was really performance.
-** xorg installations
+** DONE xorg installations
+   CLOSED: [2016-01-24 Sun 02:59]
 #+BEGIN_SRC sh
-pacman -S xorg-server xorg-server-utils xorg-apps xorg-xinit xorg-message xscreensaver feh ttf-inconsolata
+pacman -S xorg-server xorg-server-utils xorg-apps xorg-xinit  xscreensaver feh ttf-inconsolata
 #+END_SRC
-** nVIDIA
+** OPTIONAL nVIDIA
 Let’s create our nVIDIA configuration file at /etc/X11/xorg.conf.d/20-nvidia.conf with
-
+#+BEGIN_EXAMPLE
 Section "Device"
     Identifier "Nvidia Card"
     Driver "nvidia"
     VendorName "NVIDIA Corporation"
     Option "NoLogo" "true"
 EndSection
+#+END_EXAMPLE
 
-** capslog as ctl and ctl alt backspace as kill windows
+** TODO capslog as ctl and ctl alt backspace as kill windows
 I made the Caps Lock key and alternative to CTRL key (for emacs) and I set CTRL+ALT+Backspace as
 the combination to kill X Windows:
 
@@ -886,7 +923,8 @@ the combination to kill X Windows:
 
 #+RESULTS:
 
-** Next I configured the terminal to use the inconsolata font
+** DONE Next I configured the terminal to use the inconsolata font
+   CLOSED: [2016-01-24 Sun 03:01]
 #+BEGIN_SRC elisp :var buffer = inconsolata() :var filename="~/.Xresources"
   (with-temp-buffer
 ;;  (insert-file-contents filename)
@@ -935,9 +973,11 @@ xterm*faceName: Inconsolata:size=10:antialias=true
 
 We’re almost done. We now get xmonad and configure it:
 
-** Xmonad installation
+** DONE Xmonad installation
+   CLOSED: [2016-01-24 Sun 03:01]
 #+call: cmdaync("pacman -S xmonad xmonad-contrib cabal-install xmobar ghc haddock gmrun dmenu")
-** Configaring
+** DONE Configaring
+   CLOSED: [2016-01-24 Sun 03:01]
 The default configuration is a bit too white so let’s change it.
 These changes are based upon several guides and tutorials found on the
 xmonad page, on the Haskell wiki and on the Arch Linux Wiki.
@@ -950,8 +990,17 @@ and a background image. Nothing more.
 Let’s edit ~/.xmonad/xmonad.hs and add the following Haskell code
 (remember to replace my references to /home/luis with your home directory):
 
+
+#+name: rootxmo
+#+BEGIN_SRC elisp :dir ~
+(expand-file-name ".xmobarrc")
+#+END_SRC
+
+#+RESULTS:
+: /root/.xmobarrc
+
 #+NAME: xmonadcode
-#+BEGIN_SRC haskell
+#+BEGIN_SRC haskell :tangle ~/.xmonad/xmonad.hs :noweb yes :mkdirp yes
 import XMonad
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
@@ -959,7 +1008,7 @@ import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
 main = do
-xmproc <- spawnPipe "/usr/bin/xmobar {home}"
+xmproc <- spawnPipe "/usr/bin/xmobar <<rootxmo()>>"
     xmonad $ defaultConfig
     { manageHook = manageDocks <+> manageHook defaultConfig
     , layoutHook = avoidStruts  $  layoutHook defaultConfig
@@ -972,7 +1021,7 @@ xmproc <- spawnPipe "/usr/bin/xmobar {home}"
 
 ***  ~/.xmobarrc
 #+NAME: xmobar
-#+BEGIN_SRC sh
+#+BEGIN_SRC sh :tangle ~/.xmobarrc
 Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
     , bgColor = "black"
     , fgColor = "grey"
@@ -992,7 +1041,7 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
 Finally, find an image you like for background (I’m currently using this one), download it and edit you ~/.xinitrc:
 
 #+NAME: xinit
-#+BEGIN_SRC sh
+#+BEGIN_SRC sh :tangle ~/.xinitrc
 #!/bin/sh
 #
 # ~/.xinitrc
