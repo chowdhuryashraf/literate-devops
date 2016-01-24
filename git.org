@@ -1,6 +1,24 @@
-* Addto git hub
-#+BEGIN_SRC sh
-git remote add origin https://github.com/chowdhuryashraf/organizer.git
+* Git Init
+#+NAME: giturl
+#+BEGIN_SRC elisp :var name=""  :var mod=""
+(concat "https://github.com/"  name   "/" mod ".git")
+#+END_SRC
+
+#+NAME: gitinit
+#+BEGIN_SRC sh  :var project=""
+git init
+git remote add origin $project
+git remote -v
+#+END_SRC
+
+#+RESULTS:
+| Reinitialized | existing                                               | Git     | repository | in | /usr/local/src/microlibrary/friends-aneesha/.git/ |
+| origin        | [[https://github.com/chowdhuryashraf/friends-aneesha.git]] | (fetch) |            |    |                                                   |
+| origin        | [[https://github.com/chowdhuryashraf/friends-aneesha.git]] | (push)  |            |    |                                                   |
+* Git TAG
+#+NAME: gittag
+#+BEGIN_SRC sh :var tag=""
+git tag $tag
 #+END_SRC
 
 #+RESULTS:
