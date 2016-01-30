@@ -1291,7 +1291,16 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
 }
 #+END_SRC
 *** ~/.xinitrc
-Finally, find an image you like for background (I’m currently using this one), download it and edit you ~/.xinitrc:
+Finally, find an image you like for background (I’m currently using
+this one), download it and edit you ~/.xinitrc:
+#+BEGIN_SRC sh
+mkdir ~/dot
+cp /usr/local/src/literate-devops/job/pic/forcv10.jpg ~/dot/lambda.jpg
+ls ~/dot/
+#+END_SRC
+
+#+RESULTS:
+: lambda.jpg
 
 #+NAME: xinit
 #+BEGIN_SRC sh :tangle ~/.xinitrc
@@ -1479,6 +1488,25 @@ Server = http://repo.archlinux.fr/$arch
 
 #+RESULTS:
 : command  is sended to /tmp/literate-devops
+
+* TEST NTP
+#+BEGIN_SRC sh
+ntpd -qg
+#+END_SRC
+
+#+RESULTS:
+|    24 | Jan  | 14:42:58 | ntpd[675]: | ntpd      | 4.2.8p5@1.3265-o | Sun     |       Jan | 17     | 10:22:53                          | UTC         | 2016 | (1):      | Starting |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Command   | line:            | ntpd    |       -qg |        |                                   |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | proto:    | precision        | =       |     3.137 | usec   | (-18)                             |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | and              | drop    |        on | 0      | v6wildcard                        | [::]:123    |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | and              | drop    |        on | 1      | v4wildcard                        | 0.0.0.0:123 |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         2 | lo     | 127.0.0.1:123                     |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         3 | enp0s3 | 10.0.2.15:123                     |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         4 | lo     | [::1]:123                         |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         5 | enp0s3 | [fe80::2a69:6d35:a514:26be%2]:123 |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listening | on               | routing |    socket | on     | fd                                | #22         |  for | interface | updates  |
+|    24 | Jan  | 14:43:00 | ntpd[675]: | ntpd:     | time             | slew    | -0.033276 | s      |                                   |             |      |           |          |
+| ntpd: | time |     slew | -0.033276s |           |                  |         |           |        |                                   |             |      |           |          |
 
 * Start X
 At this point startx should start xmonad and show you your downloaded image as background.

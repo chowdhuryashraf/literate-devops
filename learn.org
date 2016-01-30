@@ -154,3 +154,16 @@ or use [[Command]] directly
 * Find Libarary
 M-x find-library RET kmacro
 M-x find-library RET edmacro
+* Haskell
+#+BEGIN_SRC haskell
+   increasing :: (Ord a) => [a] -> Bool
+   increasing [] =  True
+   increasing [x] = True
+   increasing (x:y:ys) = x <= y && increasing(y:ys)
+   increasing [5]
+#+END_SRC
+
+#+RESULTS:
+: Prelude Data.List System.IO System.Process>
+: <interactive>:250:1: Not in scope: ‘increasing’
+
