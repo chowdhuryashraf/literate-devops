@@ -81,11 +81,16 @@ on a wireless connection but the documentation explains how to do it.
 Let’s mount the partitions. The partition which is going to be / should be mounted on /mnt.
 
 #+BEGIN_SRC sh
-mount /dev/sda5 /mnt
+mount /dev/sda1 /mnt
 #+END_SRC
 
 
 This part takes a little bit. When that’s done it’s time to switch to the newly installed system and finish setting it up:
+** DONE Generate fstab
+   CLOSED: [2016-01-24 Sun 03:13]
+#+BEGIN_SRC sh
+genfstab -p -L /mnt >> /mnt/etc/fstab
+#+END_SRC
 
 ** DONE chrook
    CLOSED: [2016-01-24 Sun 02:45]
@@ -93,13 +98,8 @@ This part takes a little bit. When that’s done it’s time to switch to the ne
 arch-chroot /mnt
 #+END_SRC
 
-** DONE Generate fstab
-   CLOSED: [2016-01-24 Sun 03:13]
-#+BEGIN_SRC sh
-genfstab -p -L /mnt >> /mnt/etc/fstab
-#+END_SRC
-
-* Configaring things
+* DONE Configaring things
+  CLOSED: [2016-01-24 Sun 04:18]
 This part of the configuration will surely be different for you but my examples will indicate what you should be doing on your computer:
 ** DONE Host
    CLOSED: [2016-01-24 Sun 02:45]
@@ -682,7 +682,8 @@ date
 #+RESULTS:
 : Sat Jan 23 17:21:05 BDT 2016
 
-** TEST DHCP
+** DONE DHCP
+   CLOSED: [2016-01-24 Sun 04:18]
 #+BEGIN_SRC sh
 systemctl enable dhcpcd.service
 #+END_SRC
@@ -768,7 +769,8 @@ chattr +i /boot/grub/i386-pc/core.img
 
 Finally we give a password to root, exit bash and the chroot shell, unmount the system and reboot:
 
-* Fish and adding a user
+* DONE Fish and adding a user
+  CLOSED: [2016-01-24 Sun 04:42]
 Let’s start with a few basics, like not using root for everything:
 ** DONE Install sudo
    CLOSED: [2016-01-24 Sun 02:54]
@@ -783,7 +785,224 @@ which sudo
 #+RESULTS:
 : /usr/bin/sudo
 
-** TODO visudo and uncomment the wheel group line :(
+** DONE sudo user persmission
+   CLOSED: [2016-01-24 Sun 04:42]
+ and uncomment the wheel group line :(
+#+BEGIN_SRC elisp :var filename="/etc/sudoers"
+  (with-temp-buffer
+  (insert-file-contents filename )
+  (goto-char (point-min))
+  (while (search-forward "# %wheel ALL=(ALL) ALL" nil t)
+    (replace-match "%wheel ALL=(ALL) ALL"))
+  (when (file-writable-p filename)
+    (write-region (point-min) (point-max) filename nil))
+  (buffer-string))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+## sudoers file.
+##
+## This file MUST be edited with the 'visudo' command as root.
+## Failure to use 'visudo' may result in syntax or file permission errors
+## that prevent sudo from running.
+##
+## See the sudoers man page for the details on how to write a sudoers file.
+##
+
+##
+## Host alias specification
+##
+## Groups of machines. These may include host names (optionally with wildcards),
+## IP addresses, network numbers or netgroups.
+# Host_Alias	WEBSERVERS = www1, www2, www3
+
+##
+## User alias specification
+##
+## Groups of users.  These may consist of user names, uids, Unix groups,
+## or netgroups.
+# User_Alias	ADMINS = millert, dowdy, mikef
+
+##
+## Cmnd alias specification
+##
+## Groups of commands.  Often used to group related commands together.
+# Cmnd_Alias	PROCESSES = /usr/bin/nice, /bin/kill, /usr/bin/renice, \
+#                           /usr/bin/pkill, /usr/bin/top
+# Cmnd_Alias	REBOOT = /sbin/halt, /sbin/reboot, /sbin/poweroff
+
+##
+## Defaults specification
+##
+## You may wish to keep some of the following environment variables
+## when running commands via sudo.
+##
+## Locale settings
+# Defaults env_keep += "LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET"
+##
+## Run X applications through sudo; HOME is used to find the
+## .Xauthority file.  Note that other programs use HOME to find
+## configuration files and this may lead to privilege escalation!
+# Defaults env_keep += "HOME"
+##
+## X11 resource path settings
+# Defaults env_keep += "XAPPLRESDIR XFILESEARCHPATH XUSERFILESEARCHPATH"
+##
+## Desktop path settings
+# Defaults env_keep += "QTDIR KDEDIR"
+##
+## Allow sudo-run commands to inherit the callers' ConsoleKit session
+# Defaults env_keep += "XDG_SESSION_COOKIE"
+##
+## Uncomment to enable special input methods.  Care should be taken as
+## this may allow users to subvert the command being run via sudo.
+# Defaults env_keep += "XMODIFIERS GTK_IM_MODULE QT_IM_MODULE QT_IM_SWITCHER"
+##
+## Uncomment to use a hard-coded PATH instead of the user's to find commands
+# Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+##
+## Uncomment to send mail if the user does not enter the correct password.
+# Defaults mail_badpass
+##
+## Uncomment to enable logging of a command's output, except for
+## sudoreplay and reboot.  Use sudoreplay to play back logged sessions.
+# Defaults log_output
+# Defaults!/usr/bin/sudoreplay !log_output
+# Defaults!/usr/local/bin/sudoreplay !log_output
+# Defaults!REBOOT !log_output
+
+##
+## Runas alias specification
+##
+
+##
+## User privilege specification
+##
+root ALL=(ALL) ALL
+
+## Uncomment to allow members of group wheel to execute any command
+%wheel ALL=(ALL) ALL
+
+## Same thing without a password
+# %wheel ALL=(ALL) NOPASSWD: ALL
+
+## Uncomment to allow members of group sudo to execute any command
+# %sudo	ALL=(ALL) ALL
+
+## Uncomment to allow any user to run sudo if they know the password
+## of the user they are running the command as (root by default).
+# Defaults targetpw  # Ask for the password of the target user
+# ALL ALL=(ALL) ALL  # WARNING: only use this together with 'Defaults targetpw'
+
+## Read drop-in files from /etc/sudoers.d
+## (the '#' here does not indicate a comment)
+#includedir /etc/sudoers.d
+#+end_example
+
+#+call: fread("/etc/sudoers")
+
+#+RESULTS:
+#+begin_example
+## sudoers file.
+##
+## This file MUST be edited with the 'visudo' command as root.
+## Failure to use 'visudo' may result in syntax or file permission errors
+## that prevent sudo from running.
+##
+## See the sudoers man page for the details on how to write a sudoers file.
+##
+
+##
+## Host alias specification
+##
+## Groups of machines. These may include host names (optionally with wildcards),
+## IP addresses, network numbers or netgroups.
+# Host_Alias	WEBSERVERS = www1, www2, www3
+
+##
+## User alias specification
+##
+## Groups of users.  These may consist of user names, uids, Unix groups,
+## or netgroups.
+# User_Alias	ADMINS = millert, dowdy, mikef
+
+##
+## Cmnd alias specification
+##
+## Groups of commands.  Often used to group related commands together.
+# Cmnd_Alias	PROCESSES = /usr/bin/nice, /bin/kill, /usr/bin/renice, \
+#                           /usr/bin/pkill, /usr/bin/top
+# Cmnd_Alias	REBOOT = /sbin/halt, /sbin/reboot, /sbin/poweroff
+
+##
+## Defaults specification
+##
+## You may wish to keep some of the following environment variables
+## when running commands via sudo.
+##
+## Locale settings
+# Defaults env_keep += "LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET"
+##
+## Run X applications through sudo; HOME is used to find the
+## .Xauthority file.  Note that other programs use HOME to find
+## configuration files and this may lead to privilege escalation!
+# Defaults env_keep += "HOME"
+##
+## X11 resource path settings
+# Defaults env_keep += "XAPPLRESDIR XFILESEARCHPATH XUSERFILESEARCHPATH"
+##
+## Desktop path settings
+# Defaults env_keep += "QTDIR KDEDIR"
+##
+## Allow sudo-run commands to inherit the callers' ConsoleKit session
+# Defaults env_keep += "XDG_SESSION_COOKIE"
+##
+## Uncomment to enable special input methods.  Care should be taken as
+## this may allow users to subvert the command being run via sudo.
+# Defaults env_keep += "XMODIFIERS GTK_IM_MODULE QT_IM_MODULE QT_IM_SWITCHER"
+##
+## Uncomment to use a hard-coded PATH instead of the user's to find commands
+# Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+##
+## Uncomment to send mail if the user does not enter the correct password.
+# Defaults mail_badpass
+##
+## Uncomment to enable logging of a command's output, except for
+## sudoreplay and reboot.  Use sudoreplay to play back logged sessions.
+# Defaults log_output
+# Defaults!/usr/bin/sudoreplay !log_output
+# Defaults!/usr/local/bin/sudoreplay !log_output
+# Defaults!REBOOT !log_output
+
+##
+## Runas alias specification
+##
+
+##
+## User privilege specification
+##
+root ALL=(ALL) ALL
+
+## Uncomment to allow members of group wheel to execute any command
+%wheel ALL=(ALL) ALL
+
+## Same thing without a password
+# %wheel ALL=(ALL) NOPASSWD: ALL
+
+## Uncomment to allow members of group sudo to execute any command
+# %sudo	ALL=(ALL) ALL
+
+## Uncomment to allow any user to run sudo if they know the password
+## of the user they are running the command as (root by default).
+# Defaults targetpw  # Ask for the password of the target user
+# ALL ALL=(ALL) ALL  # WARNING: only use this together with 'Defaults targetpw'
+
+## Read drop-in files from /etc/sudoers.d
+## (the '#' here does not indicate a comment)
+#includedir /etc/sudoers.d
+#+end_example
+
 ** DONE install fish
    CLOSED: [2016-01-24 Sun 02:55]
 #+BEGIN_SRC sh
@@ -798,14 +1017,49 @@ Let’s get Fish as well, so that we can define it as the shell for our new user
 #+RESULTS:
 | Changing | shell    | for | root. |
 | Shell    | changed. |     |       |
-** TEST Add User
-#+BEGIN_SRC sh
- useradd --shell /usr/bin/fish --create-home -m -G wheel luis
+** DONE Add User
+   CLOSED: [2016-01-24 Sun 04:18]
+#+NAME: useradd
+#+BEGIN_SRC sh :var username=""
+ useradd --shell /usr/bin/fish -g users --create-home -m -G wheel $username
 #+END_SRC
 
-#+RESULTS:
+#+call: useradd("ashik")
 
-** TEST set passwd
+#+RESULTS:
+: nil
+
+#+call: fread("/etc/passwd")
+
+#+RESULTS:
+#+begin_example
+root:x:0:0:root:/root:/usr/bin/fish
+bin:x:1:1:bin:/bin:/usr/bin/nologin
+daemon:x:2:2:daemon:/:/usr/bin/nologin
+mail:x:8:12:mail:/var/spool/mail:/usr/bin/nologin
+ftp:x:14:11:ftp:/srv/ftp:/usr/bin/nologin
+http:x:33:33:http:/srv/http:/usr/bin/nologin
+uuidd:x:68:68:uuidd:/:/usr/bin/nologin
+dbus:x:81:81:dbus:/:/usr/bin/nologin
+nobody:x:99:99:nobody:/:/usr/bin/nologin
+systemd-journal-gateway:x:191:191:systemd-journal-gateway:/:/usr/bin/nologin
+systemd-timesync:x:192:192:systemd-timesync:/:/usr/bin/nologin
+systemd-network:x:193:193:systemd-network:/:/usr/bin/nologin
+systemd-bus-proxy:x:194:194:systemd-bus-proxy:/:/usr/bin/nologin
+systemd-resolve:x:195:195:systemd-resolve:/:/usr/bin/nologin
+systemd-journal-upload:x:999:999:systemd Journal Upload:/:/sbin/nologin
+systemd-journal-remote:x:998:998:systemd Journal Remote:/:/sbin/nologin
+avahi:x:84:84:avahi:/:/bin/nologin
+polkitd:x:102:102:Policy Kit Daemon:/:/usr/bin/nologin
+colord:x:124:124::/var/lib/colord:/bin/false
+git:x:997:997:git daemon user:/:/bin/bash
+luis:x:1000:1000::/home/luis:/usr/bin/fish
+ashik:x:1001:100::/home/ashik:/usr/bin/fish
+#+end_example
+
+#+call: add
+** DONE set passwd
+   CLOSED: [2016-01-24 Sun 04:18]
 #+BEGIN_SRC sh
 passwd luis
 #+END_SRC
@@ -816,14 +1070,22 @@ We can check that the nVIDIA driver works ok even without having X Windows, so l
 pacman -S nvidia
 #+END_SRC
 
-* TODO Reset
-- passwd
+* DONE Reset
+  CLOSED: [2016-01-23 Sat 22:59]
+** DONE passwd
+   CLOSED: [2016-01-24 Sun 03:54]
+** DONE exit
+   CLOSED: [2016-01-24 Sun 03:54]
 - exit
 - exit
+** DONE Unmount
+   CLOSED: [2016-01-23 Sat 23:02]
 - umount /mnt
+** DONE Reboot
+   CLOSED: [2016-01-23 Sat 23:02]
 - systemctl reboot
 
-* TODO Fix Resulation
+* OPTIONAL Fix Resulation
 The console will now show up in 640x480 resolution so let’s change that to something nicer. For that we need to know what resolutions our graphics card can handle and
 for that we need a tool called hwinfo
 **  hwinfo and fix framebuffer
@@ -893,7 +1155,8 @@ Mode 0x0361: 1280x800 (+5120), 24 bits
 Config Status: cfg=new, avail=yes, need=no, active=unknown
 #+END_EXAMPLE
 
-* X windows and xmonad
+* DONE X windows and xmonad
+  CLOSED: [2016-01-24 Sun 07:17]
 
 We’ll be installing a window manager, as opposed to a full desktop environment. It’s a good idea to understand the differences between the two. For me, the main reason
 to go for a window manager was really performance.
@@ -912,16 +1175,6 @@ Section "Device"
     Option "NoLogo" "true"
 EndSection
 #+END_EXAMPLE
-
-** TODO capslog as ctl and ctl alt backspace as kill windows
-I made the Caps Lock key and alternative to CTRL key (for emacs) and I set CTRL+ALT+Backspace as
-the combination to kill X Windows:
-
-#+BEGIN_SRC sh
- localectl set-X11-keymap  caps:ctrl_modifier,terminate:ctrl_alt_bksp
-#+END_SRC
-
-#+RESULTS:
 
 ** DONE Next I configured the terminal to use the inconsolata font
    CLOSED: [2016-01-24 Sun 03:01]
@@ -1038,7 +1291,16 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
 }
 #+END_SRC
 *** ~/.xinitrc
-Finally, find an image you like for background (I’m currently using this one), download it and edit you ~/.xinitrc:
+Finally, find an image you like for background (I’m currently using
+this one), download it and edit you ~/.xinitrc:
+#+BEGIN_SRC sh
+mkdir ~/dot
+cp /usr/local/src/literate-devops/job/pic/forcv10.jpg ~/dot/lambda.jpg
+ls ~/dot/
+#+END_SRC
+
+#+RESULTS:
+: lambda.jpg
 
 #+NAME: xinit
 #+BEGIN_SRC sh :tangle ~/.xinitrc
@@ -1068,6 +1330,183 @@ feh --bg-fill ~/dot/lambda.jpg
 exec xmonad
 
 #+END_SRC
+
+** OPTIONAL capslog as ctl and ctl alt backspace as kill windows
+I made the Caps Lock key and alternative to CTRL key (for emacs) and I set CTRL+ALT+Backspace as
+the combination to kill X Windows:
+
+#+BEGIN_SRC sh
+ localectl caps:ctrl_modifier,terminate:ctrl_alt_bksp
+#+END_SRC
+
+#+RESULTS:
+
+* DONE YOROOT installtaion
+  CLOSED: [2016-01-24 Sun 06:33]
+#+BEGIN_SRC elisp :var filename="/etc/pacman.conf" :var buffer=addserverpy()
+  (with-temp-buffer
+  (insert-file-contents filename)
+  (goto-char (point-max))
+  (insert buffer)
+  (when (file-writable-p filename)
+    (write-region (point-min) (point-max) filename nil))
+  (buffer-string))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+#
+# /etc/pacman.conf
+#
+# See the pacman.conf(5) manpage for option and repository directives
+
+#
+# GENERAL OPTIONS
+#
+[options]
+# The following paths are commented out with their default values listed.
+# If you wish to use different paths, uncomment and update the paths.
+#RootDir     = /
+#DBPath      = /var/lib/pacman/
+#CacheDir    = /var/cache/pacman/pkg/
+#LogFile     = /var/log/pacman.log
+#GPGDir      = /etc/pacman.d/gnupg/
+HoldPkg     = pacman glibc
+#XferCommand = /usr/bin/curl -C - -f %u > %o
+#XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+#CleanMethod = KeepInstalled
+#UseDelta    = 0.7
+Architecture = auto
+
+# Pacman won't upgrade packages listed in IgnorePkg and members of IgnoreGroup
+#IgnorePkg   =
+#IgnoreGroup =
+
+#NoUpgrade   =
+#NoExtract   =
+
+# Misc options
+#UseSyslog
+#Color
+#TotalDownload
+CheckSpace
+#VerbosePkgLists
+
+# By default, pacman accepts packages signed by keys that its local keyring
+# trusts (see pacman-key and its man page), as well as unsigned packages.
+SigLevel    = Required DatabaseOptional
+LocalFileSigLevel = Optional
+#RemoteFileSigLevel = Required
+
+# NOTE: You must run `pacman-key --init` before first using pacman; the local
+# keyring can then be populated with the keys of all official Arch Linux
+# packagers with `pacman-key --populate archlinux`.
+
+#
+# REPOSITORIES
+#   - can be defined here or included from another file
+#   - pacman will search repositories in the order defined here
+#   - local/custom mirrors can be added here or in separate files
+#   - repositories listed first will take precedence when packages
+#     have identical names, regardless of version number
+#   - URLs will have $repo replaced by the name of the current repo
+#   - URLs will have $arch replaced by the name of the architecture
+#
+# Repository entries are of the format:
+#       [repo-name]
+#       Server = ServerName
+#       Include = IncludePath
+#
+# The header [repo-name] is crucial - it must be present and
+# uncommented to enable the repo.
+#
+
+# The testing repositories are disabled by default. To enable, uncomment the
+# repo name header and Include lines. You can add preferred servers immediately
+# after the header, and they will be used before the default mirrors.
+
+#[testing]
+#Include = /etc/pacman.d/mirrorlist
+
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+#[community-testing]
+#Include = /etc/pacman.d/mirrorlist
+
+[community]
+Include = /etc/pacman.d/mirrorlist
+
+# An example of a custom package repository.  See the pacman manpage for
+# tips on creating your own repositories.
+#[custom]
+#SigLevel = Optional TrustAll
+#Server = file:///home/custompkgs
+
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
+#+end_example
+
+#+NAME: addserver
+#+BEGIN_SRC python
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
+#+END_SRC
+
+
+#+RESULTS: addserver
+:
+: [archlinuxfr]
+: SigLevel = Never
+: Server = http://repo.archlinux.fr/$arch
+
+#+NAME: addserverpy
+#+BEGIN_SRC python :noweb yes :session
+"""
+<<addserver>>
+"""
+#+END_SRC
+
+#+RESULTS: addserverpy
+:
+: [archlinuxfr]
+: SigLevel = Never
+: Server = http://repo.archlinux.fr/$arch
+
+
+#+call: cmdaync("pacman -Syu")
+
+#+RESULTS:
+: command  is sended to /tmp/literate-devops
+
+#+call: cmdaync("pacman -S yaourt")
+
+#+RESULTS:
+: command  is sended to /tmp/literate-devops
+
+* TEST NTP
+#+BEGIN_SRC sh
+ntpd -qg
+#+END_SRC
+
+#+RESULTS:
+|    24 | Jan  | 14:42:58 | ntpd[675]: | ntpd      | 4.2.8p5@1.3265-o | Sun     |       Jan | 17     | 10:22:53                          | UTC         | 2016 | (1):      | Starting |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Command   | line:            | ntpd    |       -qg |        |                                   |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | proto:    | precision        | =       |     3.137 | usec   | (-18)                             |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | and              | drop    |        on | 0      | v6wildcard                        | [::]:123    |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | and              | drop    |        on | 1      | v4wildcard                        | 0.0.0.0:123 |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         2 | lo     | 127.0.0.1:123                     |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         3 | enp0s3 | 10.0.2.15:123                     |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         4 | lo     | [::1]:123                         |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listen    | normally         | on      |         5 | enp0s3 | [fe80::2a69:6d35:a514:26be%2]:123 |             |      |           |          |
+|    24 | Jan  | 14:42:58 | ntpd[675]: | Listening | on               | routing |    socket | on     | fd                                | #22         |  for | interface | updates  |
+|    24 | Jan  | 14:43:00 | ntpd[675]: | ntpd:     | time             | slew    | -0.033276 | s      |                                   |             |      |           |          |
+| ntpd: | time |     slew | -0.033276s |           |                  |         |           |        |                                   |             |      |           |          |
 
 * Start X
 At this point startx should start xmonad and show you your downloaded image as background.

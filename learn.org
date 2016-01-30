@@ -4,21 +4,18 @@
 ** Text manipulation
 ** Rectangle Mode
 *** Delete "C-x r d"
-*** [[rantangle mode ][https://kb.iu.edu/d/afhg]]
 *** rectangle-mark-mode
-** CUA
 *** cua-resize-rectangle-right
 ** Regex
-*** [[http://ergoemacs.org/emacs/emacs_regex.html][Emacs: Regex Text Pattern Tutorial ]]
 *** Syntax
-**** DONE Double Quate
+**** Double Quate
      CLOSED: [2015-11-23 সোম 22:07]
 | PatternMatches                                  |
 | "\([^"]+\)" capture text between double quotes. |
 | "hello world"                                   |
 
 *** Matching Newline ＆ Tab
-**** To enter a new line, press 【Ctrl+q Ctrl+j】 Emacs: Newline link [[http://ergoemacs.org/emacs/emacs_line_ending_char.html][^M ^J ^L]]
+**** To enter a new line, press 【Ctrl+q Ctrl+j】
 **** To enter a Tab character, press 【Ctrl+q Tab ↹】
 ***  Boundary anchors
 | \`…                           |
@@ -28,158 +25,37 @@
 | \b                            |
 | word boundary marker          |
 
-** Clipboard [2/3] 						  :CLIPBOARD:
-  - [X] Meta clipboard-kill-ring-save
-  - [ ] clipboard-kill-region
+** Clipboard [2/3]                                                :CLIPBOARD:
+  - [ ] Meta clipboard-kill-ring-save
+  - [X] clipboard-kill-region
   - [X] clipboard-yank
-** Buffer
 ** M-x RET set-variable RET
-*** bold, italic
-【Alt+o d】 default
-【Alt+o b】 bold
-【Alt+o i】 italic
-【Alt+o l】 bold-italic
-【Alt+o u】 underline
-Press 【Alt+o Ctrl+h】 to see complete list of keys.
-
-** IDO Intro: M-x customize-group RET ido RET
-** Cursor Movement and Location
-	- [X] arrow keys (if available)N/AMove cursor.
-	- [X] C-abeginning-of-lineMove to beginning of line.
-	- [X] C-eend-of-lineMove to end of line.
-	- [X] C-fforward-charMove forward one character.
-	- [X] C-bbackward-charMove backward one character.
-	- [ ] M-f forward-wordMove forward one word.
-	- [X] M-bbackward-wordMove backward one word.
-	- [X] C-nnext-lineMove down a line (creating the next line, if necessary).
-	- [X] C-pprevious-lineMove up a line.
-	- [ ] M-r move-to-window-lineMove to left margin, vertically centered in window.
-	- [X] M-<beginning-of-bufferMove to top of buffer.
-	- [X] M->end-of-bufferMove to end of buffer.
-	- [ ] M-x goto-chargoto-charRead a number and go to that buffer position (start = 1).
-	- [X] M-x goto-line goto-line Read a number and go to that line (first line = 1).
-	- [ ] C-x C-nset-goal-columnSet current column as 'goal column'.  From then on, the C-n and C-p commands jump to that column, or the nearest possible column.
-	- [ ] C-u C-x C-nN/ACancel the 'goal column', and return to normal behaviour.
-	- [ ] M-x what-pagewhat-pageDisplay page number and line number (within page) of cursor location.
-	- [ ] M-x what-linewhat-lineDisplay line number (within buffer) of cursor location.
-	- [ ] M-x line-number-modeline-number-modeDisplay line number automatically (toggle).
-	- [ ] M-=count-lines-regionPrint number of lines in current region.
-	- [ ] C-x =what-cursor-postitionPrint character code, character position and column of the cursor location.
-** Setting Mark C-@ -> (c shfit 1 )
-** [http://www.gnu.org/software/emacs/manual/html_node/emacs/Mark.htmlhttp://www.gnu.org/software/emacs/manual/html_node/emacs/Mark.htmlhttp://www.gnu.org/software/emacs/manual/html_node/emacs/Mark.html]
-** C-w . . Kill region. This deletes and puts the region into the kill ring.
-** C-y . . Yank. This inserts the last snippet from the kill ring.
-** M-y . . Cycle kill ring. Immediately after C-y, this replaces the yanked part by the other snippets in the kill ring.
-** M-w . . Save region into kill ring. Like C-w, but doesn't delete.
-** In short, you start selection like usual with C-spc, then kill region with C-x r k and paste/yank killed block with C-x r y
-** Creating and Selecting Buffers [[http://www.chemie.fu-berlin.de/chemnet/use/info/emacs/emacs_19.html][multiple buffer ]]
-** C-x b buffer RET
-** C-x 4 buffer RET - another window ( switch-to-buffer-other-window )
-** C-x 4 b buffer RET another frame
-* Utils
-** Bash Compilation
-*** [[https://github.com/szermatt/emacs-bash-completion][emacs bash compilation]]
-**** bash-completion.el defines dynamic completion hooks for shell-mode and
-    shell-command prompts that are based on bash completion.
-
-**** Bash completion for emacs:
-***** is aware of bash builtins, aliases and functions
-***** does file expansion inside of colon***separated variables
-    and after redirections (> or <)
-***** escapes special characters when expanding file names
-***** is configurable through programmable bash completion
-
-When the first completion is requested in shell model or a shell
-command, bash-completion.el starts a separate bash
-process.  Bash-completion.el then uses this process to do the actual
-completion and includes it into Emacs completion suggestions.
-
-A simpler and more complete alternative to bash-completion.el is to
-run a bash shell in a buffer in term mode(M-x `ansi-term').
-Unfortunately, many Emacs editing features are not available when
-running in term mode.  Also, term mode is not available in
-shell-command prompts.
-
-**** INSTALLATION
-
-***** copy bash-completion.el into a directory that's on Emacs load-path
-***** add this into your .emacs file:
-
-          (autoload 'bash-completion-dynamic-complete
-            "bash-completion"
-            "BASH completion hook")
-          (add-hook 'shell-dynamic-complete-functions
-            'bash-completion-dynamic-complete)
-
-    or simpler, but forces you to load this file at startup:
-
-          (require 'bash-completion)
-          (bash-completion-setup)
-
-***** reload your .emacs (M-x `eval-buffer') or restart
-
-Once this is done, use <TAB> as usual to do dynamic completion from
-shell mode or a shell command minibuffer, such as the one started
-for M-x `compile'. Note that the first completion is slow, as emacs
-launches a new bash process.
-
-You'll get better results if you turn on programmable bash completion.
-On Ubuntu, this means running:
-
-    sudo apt-get install bash-completion
-
-and then adding this to your .bashrc:
-
-    . /etc/bash_completion
-
-Right after enabling programmable bash completion, and whenever you
-make changes to you .bashrc, call `bash-completion-reset' to make
-sure bash completion takes your new settings into account.
-
-Loading /etc/bash_completion often takes time, and is not necessary
-in shell mode, since completion is done by a separate process, not
-the process shell-mode process.
-
-To turn off bash completion when running from emacs but keep it on
-for processes started by bash-completion.el, add this to your .bashrc:
-
-    if [[ ( -z "$INSIDE_EMACS" || "$EMACS_BASH_COMPLETE" = "t" ) &&\
-         -f /etc/bash_completion ]]; then
-      . /etc/bash_completion
-    fi
-
-Emacs sets the environment variable INSIDE_EMACS to the processes
-started from it. Processes started by bash-completion.el have
-the environment variable EMACS_BASH_COMPLETE set to t.
-
-**** CAVEATS
-
-Using a separate process for doing the completion has several
-important disadvantages:
-
-- bash completion is slower than standard emacs completion
-- the first completion can take a long time, since a new bash process
-  needs to be started and initialized
-- the separate process is not aware of any changes made to bash
-  in the current buffer.
-  In a standard terminal, you could do:
-
-        $ alias myalias=ls
-        $ myal<TAB>
-
-  and bash would propose the new alias.
-  Bash-completion.el cannot do that, as it is not aware of anything
-  configured in the current shell. To make bash-completion.el aware
-  of a new alias, you need to add it to .bashrc and restart the
-  completion process using `bash-completion-reset'.
-
-**** COMPATIBILITY
-
-bash-completion.el is known to work on Emacs 22 through 24.4 under
-Linux and OSX. It does not works on XEmacs.
-
-*** .emacs.d/emacs-bash-completion
-** [[http://unix.stackexchange.com/questions/104325/what-is-the-difference-between-shell-eshell-and-term-in-emacs][What is the difference between shell, eshell, and term in Emacs]]
+** Cursor Movement and Location [16/16]
+        - [X] arrow keys (if available)N/AMove cursor.
+        - [X] C-abeginning-of-lineMove to beginning of line.
+        - [X] C-eend-of-lineMove to end of line.
+        - [X] C-fforward-charMove forward one character.
+        - [X] C-bbackward-charMove backward one character.
+        - [X] M-f forward-wordMove󿿿 forward one word.
+        - [X] M-bbackward-wordMove backward one word.
+        - [X] C-nnext-lineMove down a line (creating the next line, if necessary).
+        - [X] C-pprevious-lineMove up a line.
+        - [X] M-r move-to-window-lineMove to left margin, vertically centered in window.
+        - [X] M-<beginning-of-bufferMove to top of buffer.
+        - [X] M->end-of-bufferMove to end of buffer.
+        - [X] M-x goto-chargoto-charRead a number and go to that buffer position (start = 1).
+        - [X] M-x goto-line goto-line Read a number and go to that line (first line = 1).
+        - [X] M-=count-lines-regionPrint number of lines in current region.
+        - [X] C-x =what-cursor-postitionPrint character code, character position and column of the cursor location.
+        - [ ] Setting Mark C-@ -> (c shfit 1 )
+        - [ ] C-w . . Kill region. This deletes and puts the region into the kill ring.
+        - [ ] C-y . . Yank. This inserts the last snippet from the kill ring.
+        - [ ] M-y . . Cycle kill ring. Immediately after C-y, this replaces the yanked part by the other snippets in the kill ring.
+        - [ ] M-w . . Save region into kill ring. Like C-w, but doesn't delete.
+        - [ ] In short, you start selection like usual with C-spc, then kill region with C-x r k and paste/yank killed block with C-x r y
+        - [ ] C-x b buffer RET
+        - [ ] C-x 4 buffer RET - another window ( switch-to-buffer-other-window )
+        - [ ] C-x 4 b buffer RET another frame
 * Lisp
 ** find file
 #+BEGIN_SRC elisp
@@ -200,9 +76,6 @@ Linux and OSX. It does not works on XEmacs.
 
 #+RESULTS:
 : 1
-
-
-
 
 *** Automatically save your changes after an customizable interval
 I really like this idea, because it’s dumb to make me hit C-x C-s all the time because of technical details of the computer’s architecture, and almost everything I edit is under version control anyway. I like using auto-save-hook, and that seems to work well, but I want to save all the buffers, because if I switch away from a buffer before it autosaves, I want it to get saved when things next get saved after that. So I combined parts of the two above solutions (this is the first elisp code I’ve written, could have glaring problems)
@@ -259,18 +132,15 @@ I really like this idea, because it’s dumb to make me hit C-x C-s all the time
 (global-set-key [f4] 'ash-theme-cycle)
 #+END_SRC
 
-** Keyboard Macro
-*** f3 start
-*** f4 end
-*** c-x e - execute
-*** c-x c-k SPC - debug
-*** c-x c-k n - name exp name: abc_mac
-*** in .emacs.d - insert-kbd-macro abc_mac
-*** repeat infinate c-u 0 c-x e
-*** recent commands c-x c-k l
-*** Find Macro Libarary
-M-x find-library RET kmacro
-M-x find-library RET edmacro
+** Keyboard Macro [8/9]
+        - [X] f3 start
+        - [X] f4 end
+        - [X] c-x e - execute
+        - [X] c-x c-k SPC - debug
+        - [X] c-x c-k n - name exp name: abc_mac
+        - [X] in .emacs.d - insert-kbd-macro abc_mac
+        - [X] repeat infinate c-u 0 c-x e
+        - [X] recent commands c-x c-k l
 ** Line Truncate
 *** Elisp Command
 Note: Need to reset Emacs to get truncate effect
@@ -284,3 +154,16 @@ or use [[Command]] directly
 * Find Libarary
 M-x find-library RET kmacro
 M-x find-library RET edmacro
+* Haskell
+#+BEGIN_SRC haskell
+   increasing :: (Ord a) => [a] -> Bool
+   increasing [] =  True
+   increasing [x] = True
+   increasing (x:y:ys) = x <= y && increasing(y:ys)
+   increasing [5]
+#+END_SRC
+
+#+RESULTS:
+: Prelude Data.List System.IO System.Process>
+: <interactive>:250:1: Not in scope: ‘increasing’
+
