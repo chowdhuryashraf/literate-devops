@@ -51,17 +51,15 @@ logged in as root in a prompt.
 #+BEGIN_SRC sh
  loadkeys /usr/share/kbd/keymaps/i386/qwerty/pt-latin9.map.gz
 #+END_SRC
-
+** mount filesystem
 Since we already partitioned the disks, let’s format them. In my case, I had 2 extended partitions (sda5 and sda6) under a logical partition, after the Windows 8
 partitions:
-#+BEGIN_SRC sh
- mkfs.ext4 /dev/sda5
+#+NAME: mnt
+#+BEGIN_SRC sh :var X="2"
+ mkfs.ext4 /dev/sda$X
 #+END_SRC
 ** DONE Swap
    CLOSED: [2016-01-24 Sun 02:44]
-#+BEGIN_SRC
- swapon /dev/sda6
-#+END_SRC
 
 Now we install the base system onto /mnt. We’ll first vi
 /etc/pacman.d/mirrorlist and leave only the best mirrors.
@@ -75,13 +73,17 @@ on a wireless connection but the documentation explains how to do it.
  mkswap /dev/sda6
 #+END_SRC
 
+#+BEGIN_SRC
+ swapon /dev/sda6
+#+END_SRC
+
 ** DONE Monut
    CLOSED: [2016-01-24 Sun 02:45]
 
 Let’s mount the partitions. The partition which is going to be / should be mounted on /mnt.
-
-#+BEGIN_SRC sh
-mount /dev/sda1 /mnt
+#+NAME: mntto
+#+BEGIN_SRC sh :var X=""
+mount /dev/sda$X /mnt
 #+END_SRC
 
 
@@ -103,12 +105,15 @@ arch-chroot /mnt
 This part of the configuration will surely be different for you but my examples will indicate what you should be doing on your computer:
 ** DONE Host
    CLOSED: [2016-01-24 Sun 02:45]
+
+#+call: fread("/etc/hostname")
+
+#+RESULTS:
+: asik-105
+
 #+BEGIN_SRC sh
 echo archnua > /etc/hostname
 #+END_SRC
-
-#+RESULTS:
-#+call: fread("/etc/hostname")
 
 #+RESULTS:
 : archnua
@@ -124,16 +129,7 @@ ln -sf /usr/share/zoneinfo/Asia/Dhaka  /etc/localtime
 ** DONE Keyboard (US)
    CLOSED: [2016-01-24 Sun 02:46]
 - /etc/locale.gen and uncommented en_GB entries and then run locale-gen
-#+BEGIN_SRC elisp :var filename="/etc/locale.gen")
-  (with-temp-buffer
-    (insert-file-contents filename)
-    (goto-char (point-min))
-    (while (search-forward "#en_US" nil t)
-      (replace-match "en_US"))
-    (when (file-writable-p filename)
-      (write-region (point-min) (point-max) filename nil))
-      (buffer-string))
-#+END_SRC
+#+call: filesearchreplace("/etc/locale.gen","#en_US","en_US");
 
 #+RESULTS:
 #+begin_example
@@ -788,16 +784,7 @@ which sudo
 ** DONE sudo user persmission
    CLOSED: [2016-01-24 Sun 04:42]
  and uncomment the wheel group line :(
-#+BEGIN_SRC elisp :var filename="/etc/sudoers"
-  (with-temp-buffer
-  (insert-file-contents filename )
-  (goto-char (point-min))
-  (while (search-forward "# %wheel ALL=(ALL) ALL" nil t)
-    (replace-match "%wheel ALL=(ALL) ALL"))
-  (when (file-writable-p filename)
-    (write-region (point-min) (point-max) filename nil))
-  (buffer-string))
-#+END_SRC
+#+call: filesearchreplace("/etc/sudoers","# %wheel ALL=(ALL) ALL", "%wheel ALL=(ALL) ALL")
 
 #+RESULTS:
 #+begin_example
@@ -1019,10 +1006,6 @@ Let’s get Fish as well, so that we can define it as the shell for our new user
 | Shell    | changed. |     |       |
 ** DONE Add User
    CLOSED: [2016-01-24 Sun 04:18]
-#+NAME: useradd
-#+BEGIN_SRC sh :var username=""
- useradd --shell /usr/bin/fish -g users --create-home -m -G wheel $username
-#+END_SRC
 
 #+call: useradd("ashik")
 
@@ -1162,6 +1145,7 @@ We’ll be installing a window manager, as opposed to a full desktop environment
 to go for a window manager was really performance.
 ** DONE xorg installations
    CLOSED: [2016-01-24 Sun 02:59]
+#+NAME:
 #+BEGIN_SRC sh
 pacman -S xorg-server xorg-server-utils xorg-apps xorg-xinit  xscreensaver feh ttf-inconsolata
 #+END_SRC
@@ -1178,17 +1162,10 @@ EndSection
 
 ** DONE Next I configured the terminal to use the inconsolata font
    CLOSED: [2016-01-24 Sun 03:01]
-#+BEGIN_SRC elisp :var buffer = inconsolata() :var filename="~/.Xresources"
-  (with-temp-buffer
-;;  (insert-file-contents filename)
-  (insert buffer)
-  (when (file-writable-p filename)
-    (write-region (point-min) (point-max) filename nil))
-  (buffer-string))
-#+END_SRC
+
+#+CALL: addcodetofile(inconsolata_txt(), "~/.Xresources")
 
 #+RESULTS:
-:
 : XTerm*reverseVideo: on
 : xterm*faceName: Inconsolata:size=10:antialias=true
 
@@ -1199,32 +1176,22 @@ EndSection
 : XTerm*reverseVideo: on
 : xterm*faceName: Inconsolata:size=10:antialias=true
 
-#+NAME: inconsolatatxt
+#+NAME: inconsolata
 #+BEGIN_SRC elisp
 XTerm*reverseVideo: on
 xterm*faceName: Inconsolata:size=10:antialias=true
 #+END_SRC
 
+#+call: wrap("inconsolata") :results raw
 
-#+NAME: inconsolata
+#+RESULTS:
+- Wrap inconsolata
+#+NAME: inconsolata_txt
 #+BEGIN_SRC python :session :noweb yes
 """
-<<inconsolatatxt>>
+<<inconsolata>>
 """
 #+END_SRC
-
-#+RESULTS: inconsolata
-:
-: XTerm*reverseVideo: on
-: xterm*faceName: Inconsolata:size=10:antialias=true
-
-
-
-
-
-
-
-We’re almost done. We now get xmonad and configure it:
 
 ** DONE Xmonad installation
    CLOSED: [2016-01-24 Sun 03:01]
@@ -1295,6 +1262,7 @@ Finally, find an image you like for background (I’m currently using
 this one), download it and edit you ~/.xinitrc:
 #+BEGIN_SRC sh
 mkdir ~/dot
+wet http://www.simwallpaper.com/wp-content/uploads/2015/04/Cool-Car-Pitchers-3.jpg
 cp /usr/local/src/literate-devops/job/pic/forcv10.jpg ~/dot/lambda.jpg
 ls ~/dot/
 #+END_SRC
@@ -1343,113 +1311,8 @@ the combination to kill X Windows:
 
 * DONE YOROOT installtaion
   CLOSED: [2016-01-24 Sun 06:33]
-#+BEGIN_SRC elisp :var filename="/etc/pacman.conf" :var buffer=addserverpy()
-  (with-temp-buffer
-  (insert-file-contents filename)
-  (goto-char (point-max))
-  (insert buffer)
-  (when (file-writable-p filename)
-    (write-region (point-min) (point-max) filename nil))
-  (buffer-string))
-#+END_SRC
 
-#+RESULTS:
-#+begin_example
-#
-# /etc/pacman.conf
-#
-# See the pacman.conf(5) manpage for option and repository directives
-
-#
-# GENERAL OPTIONS
-#
-[options]
-# The following paths are commented out with their default values listed.
-# If you wish to use different paths, uncomment and update the paths.
-#RootDir     = /
-#DBPath      = /var/lib/pacman/
-#CacheDir    = /var/cache/pacman/pkg/
-#LogFile     = /var/log/pacman.log
-#GPGDir      = /etc/pacman.d/gnupg/
-HoldPkg     = pacman glibc
-#XferCommand = /usr/bin/curl -C - -f %u > %o
-#XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
-#CleanMethod = KeepInstalled
-#UseDelta    = 0.7
-Architecture = auto
-
-# Pacman won't upgrade packages listed in IgnorePkg and members of IgnoreGroup
-#IgnorePkg   =
-#IgnoreGroup =
-
-#NoUpgrade   =
-#NoExtract   =
-
-# Misc options
-#UseSyslog
-#Color
-#TotalDownload
-CheckSpace
-#VerbosePkgLists
-
-# By default, pacman accepts packages signed by keys that its local keyring
-# trusts (see pacman-key and its man page), as well as unsigned packages.
-SigLevel    = Required DatabaseOptional
-LocalFileSigLevel = Optional
-#RemoteFileSigLevel = Required
-
-# NOTE: You must run `pacman-key --init` before first using pacman; the local
-# keyring can then be populated with the keys of all official Arch Linux
-# packagers with `pacman-key --populate archlinux`.
-
-#
-# REPOSITORIES
-#   - can be defined here or included from another file
-#   - pacman will search repositories in the order defined here
-#   - local/custom mirrors can be added here or in separate files
-#   - repositories listed first will take precedence when packages
-#     have identical names, regardless of version number
-#   - URLs will have $repo replaced by the name of the current repo
-#   - URLs will have $arch replaced by the name of the architecture
-#
-# Repository entries are of the format:
-#       [repo-name]
-#       Server = ServerName
-#       Include = IncludePath
-#
-# The header [repo-name] is crucial - it must be present and
-# uncommented to enable the repo.
-#
-
-# The testing repositories are disabled by default. To enable, uncomment the
-# repo name header and Include lines. You can add preferred servers immediately
-# after the header, and they will be used before the default mirrors.
-
-#[testing]
-#Include = /etc/pacman.d/mirrorlist
-
-[core]
-Include = /etc/pacman.d/mirrorlist
-
-[extra]
-Include = /etc/pacman.d/mirrorlist
-
-#[community-testing]
-#Include = /etc/pacman.d/mirrorlist
-
-[community]
-Include = /etc/pacman.d/mirrorlist
-
-# An example of a custom package repository.  See the pacman manpage for
-# tips on creating your own repositories.
-#[custom]
-#SigLevel = Optional TrustAll
-#Server = file:///home/custompkgs
-
-[archlinuxfr]
-SigLevel = Never
-Server = http://repo.archlinux.fr/$arch
-#+end_example
+#+call: addcodetofile(addserver_txt(),"/etc/pacman.conf")
 
 #+NAME: addserver
 #+BEGIN_SRC python
@@ -1465,29 +1328,20 @@ Server = http://repo.archlinux.fr/$arch
 : SigLevel = Never
 : Server = http://repo.archlinux.fr/$arch
 
-#+NAME: addserverpy
-#+BEGIN_SRC python :noweb yes :session
-"""
-<<addserver>>
-"""
-#+END_SRC
-
-#+RESULTS: addserverpy
-:
-: [archlinuxfr]
-: SigLevel = Never
-: Server = http://repo.archlinux.fr/$arch
-
+#+call: wrap("addserver") :results raw
 
 #+call: cmdaync("pacman -Syu")
-
-#+RESULTS:
-: command  is sended to /tmp/literate-devops
 
 #+call: cmdaync("pacman -S yaourt")
 
 #+RESULTS:
-: command  is sended to /tmp/literate-devops
+- Wrap addserver
+#+NAME: addserver_txt
+#+BEGIN_SRC python :session :noweb yes
+"""
+<<addserver>>
+"""
+#+END_SRC
 
 * TEST NTP
 #+BEGIN_SRC sh

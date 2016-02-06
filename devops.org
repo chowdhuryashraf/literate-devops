@@ -107,6 +107,29 @@ BBL_START
 
 #+RESULTS: tmpbuf
 
+** file search replace
+#+NAME: filesearchreplace
+#+BEGIN_SRC elisp :var filename="" :var sstr="" :var rstr=""
+  (with-temp-buffer
+    (insert-file-contents filename)
+    (goto-char (point-min))
+    (while (search-forward sstr nil t)
+      (replace-match rstr))
+    (when (file-writable-p filename)
+      (write-region (point-min) (point-max) filename nil))
+      (buffer-string))
+#+END_SRC
+** Add code to File
+#+NAME: addcodetofile
+#+BEGIN_SRC elisp :var buffer=""  :var filename=""
+  (with-temp-buffer
+;;  (insert-file-contents filename)
+  (insert buffer)
+  (when (file-writable-p filename)
+    (write-region (point-min) (point-max) filename nil))
+  (buffer-string))
+#+END_SRC
+
 * Setup.org
 ** Pandoc org to markdown_github
 #+NAME: readme
@@ -212,3 +235,25 @@ pipe="/tmp/"$mod
 
 #+RESULTS: check_pipeserver_running
 : command  is sended to /tmp/friends-aneesha
+* Linux
+#+NAME: useradd
+#+BEGIN_SRC sh :var username=""
+ useradd --shell /usr/bin/fish -g users --create-home -m -G wheel $username
+#+END_SRC
+* babel
+** Wrap
+#+NAME: wrap
+#+BEGIN_SRC elisp :var snippet=""
+  (with-temp-buffer
+    (insert "  - Wrap ")
+    (insert snippet)
+    (insert "\n#+NAME: ")
+    (insert snippet)
+    (insert "_txt")
+    (insert "\n#+BEGIN_SRC python :session :noweb yes\n")
+    (insert "\"\"\"\n<<")
+    (insert snippet)
+    (insert ">>\n\"\"\"\n")
+    (insert "#+END_SRC")
+    (buffer-string))
+#+END_SRC
