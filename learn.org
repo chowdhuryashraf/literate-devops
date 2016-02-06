@@ -1,4 +1,4 @@
-#+TAGS: GTD(g) TIME(t) CLOCKIN(k) SUDO(s) CLIPBOARD(c)
+#+TAGS: CLOCKIN(k) SUDO(s) CLIPBOARD(c) TRUNCATE(e)
 #+SEQ_TODO: TODO TEST DONE
 * Tutorial
 ** Text manipulation
@@ -56,6 +56,12 @@
         - [ ] C-x b buffer RET
         - [ ] C-x 4 buffer RET - another window ( switch-to-buffer-other-window )
         - [ ] C-x 4 b buffer RET another frame
+** Evaluate all code chunks below current header
+It sounds like you want org-babel-execute-buffer or org-babel-execute-subtree (C-c C-v s).
+** Emacs in Bash
+emacs --batch --load ~/.emacs \
+      --eval "(progn (require 'org-mobile) (org-mobile-push))"
+** org updown M-S-<up> and M-S-<down>
 * Lisp
 ** find file
 #+BEGIN_SRC elisp
@@ -141,7 +147,7 @@ I really like this idea, because it’s dumb to make me hit C-x C-s all the time
         - [X] in .emacs.d - insert-kbd-macro abc_mac
         - [X] repeat infinate c-u 0 c-x e
         - [X] recent commands c-x c-k l
-** Line Truncate
+** Line Truncate                                                   :TRUNCATE:
 *** Elisp Command
 Note: Need to reset Emacs to get truncate effect
 or use [[Command]] directly
@@ -151,6 +157,22 @@ or use [[Command]] directly
 #+RESULTS:
 *** Command
 ****  M-x set-variable truncate-lines nil.
+** How can I set a deadline on TODO for the last weekday of the month
+#+BEGIN_SRC elisp
+(defun last-working-day-deadline ()
+  (interactive)
+  (let* ((date (calendar-current-date))
+  (day (calendar-extract-day date))
+  (month (calendar-extract-month date))
+  (year (calendar-extract-year date))
+  (lastday (calendar-last-day-of-month month year)))
+  ;; workdays have "names" of 1 2 3 4 or 5
+  (while (not (memq (calendar-day-of-week (list month lastday year)) '(1 2 3 4 5)))
+  (decf lastday))
+ (org-deadline nil (format "%s-%s-%s" year month lastday))))
+#+END_SRC
+** show the Org-mode agenda on Emacs start-up
+(add-hook 'after-init-hook 'org-agenda-list)
 * Find Libarary
 M-x find-library RET kmacro
 M-x find-library RET edmacro
@@ -166,4 +188,3 @@ M-x find-library RET edmacro
 #+RESULTS:
 : Prelude Data.List System.IO System.Process>
 : <interactive>:250:1: Not in scope: ‘increasing’
-
