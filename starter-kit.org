@@ -302,39 +302,11 @@ ln -s $dr ~/.emacs.d
 ls -l ~/.emacs.d
 #+END_SRC
 
-**** Add starter kit
+**** Add starter kit                                                :PRELUDE:
 #+BEGIN_SRC sh
 cp custom.el ~/.emacs.d/personal
 #+END_SRC
-**** Emacs Setup
-#+BEGIN_SRC sh :dir ~
-ls -la
-#+END_SRC
-
-#+RESULTS:
-| total      | 76 |      |      |      |     |    |       |                 |    |                                |
-| drwxr-x--- | 11 | root | root | 4096 | Jan | 24 | 06:29 | .               |    |                                |
-| drwxr-xr-x | 17 | root | root | 4096 | Jan | 22 | 02:09 | ..              |    |                                |
-| drwx------ |  4 | root | root | 4096 | Jan | 23 | 00:15 | backups         |    |                                |
-| -rw------- |  1 | root | root | 3688 | Jan | 24 | 04:49 | .bash_history   |    |                                |
-| drwx------ |  3 | root | root | 4096 | Jan | 23 | 22:53 | .config         |    |                                |
-| lrwxrwxrwx |  1 | root | root |   22 | Jan | 23 | 00:38 | .emacs.d        | -> | /usr/local/src/prelude         |
-| drwxr-xr-x |  3 | root | root | 4096 | Jan | 23 | 00:42 | .erc            |    |                                |
-| -rw-r--r-- |  1 | root | root |   70 | Jan | 22 | 03:55 | .gitconfig      |    |                                |
-| drwx------ |  3 | root | root | 4096 | Jan | 23 | 00:41 | .gnupg          |    |                                |
-| drwxr-xr-x |  2 | root | root | 4096 | Jan | 23 | 22:53 | .kbd            |    |                                |
-| drwx------ |  3 | root | root | 4096 | Jan | 24 | 03:43 | .local          |    |                                |
-| lrwxrwxrwx |  1 | root | root |   30 | Jan | 23 | 00:03 | org             | -> | /usr/local/src/literate-devops |
-| drwxr-xr-x |  2 | root | root | 4096 | Dec | 31 |  2004 | orgbackups      |    |                                |
-| -rw-r--r-- |  1 | root | root | 5770 | Jan | 24 | 06:29 | orgplaces       |    |                                |
-| -rw------- |  1 | root | root |    0 | Jan | 24 | 04:47 | .python_history |    |                                |
-| drwx------ |  2 | root | root | 4096 | Jan | 24 | 04:15 | .ssh            |    |                                |
-| -rw------- |  1 | root | root |   52 | Jan | 23 | 22:53 | .Xauthority     |    |                                |
-| -rw-r--r-- |  1 | root | root |  435 | Jan | 24 | 02:34 | .xinitrc        |    |                                |
-| -rw-r--r-- |  1 | root | root |  654 | Jan | 24 | 02:34 | .xmobarrc       |    |                                |
-| drwxr-xr-x |  2 | root | root | 4096 | Jan | 23 | 22:53 | .xmonad         |    |                                |
-| -rw-r--r-- |  1 | root | root |   75 | Jan | 23 | 21:40 | .Xresources     |    |                                |
-
+**** Emacs Setup For Debain
 #+NAME: ealias
 #+begin_src sh
 alias emd='emacs --daemon'
@@ -345,9 +317,32 @@ alias vi='emacsclient -t'
 export TERM=xterm-256color
 #+end_src
 
-#+BEGIN_SRC elisp :var file="~/.bashrc"
-(with-temp-buffer (insert-file-contents file) (buffer-string))
+#+call: wrap("ealias") :results raw
+
+#+RESULTS:
+  - Wrap ealias
+#+NAME: ealias_txt
+#+BEGIN_SRC python :session :noweb yes
+"""
+<<ealias>>
+"""
 #+END_SRC
+
+
+#+call: fwrite("~/.bashrc", ealias_txt())
+
+#+RESULTS:
+: nil
+#+call: fread("~/.bashrc")
+
+#+RESULTS:
+:
+: alias emd='emacs --daemon'
+: alias e='emacsclient -t'
+: alias ec='emacsclient -c'
+: alias vim='emacsclient -t'
+: alias vi='emacsclient -t'
+: export TERM=xterm-256color
 
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
@@ -426,11 +421,6 @@ interested in the actual code implementing the starter kit.
   (setq inhibit-startup-message t)
 #+END_SRC
 
-- Truncate Line
- #+NAME: starter-kit-truncate
- #+BEGIN_SRC emacs-lisp
- (setq-default truncate-lines nil)
- #+END_SRC
 
 ** Starter kit core
    :PROPERTIES:
@@ -440,20 +430,20 @@ The following files contain the remainder of the core of the Emacs
 Starter Kit.  All of the code in this section should be loaded by
 everyone using the starter kit.
 
-- Starter kit function definitions in [[file:starter-kit-defuns.org][starter-kit-defuns]]
-  #+begin_src emacs-lisp
-  (starter-kit-load "starter-kit-defuns.org")
-  #+end_src
+# - Starter kit function definitions in [[file:starter-kit-defuns.org][starter-kit-defuns]]
+#   #+begin_src emacs-lisp
+#   (starter-kit-load "starter-kit-defuns.org")
+#   #+end_src
 
-- Key Bindings in [[file:starter-kit-bindings.org][starter-kit-bindings]]
-  #+begin_src emacs-lisp
-  (starter-kit-load "starter-kit-bindings.org")
-  #+end_src
+# - Key Bindings in [[file:starter-kit-bindings.org][starter-kit-bindings]]
+#   #+begin_src emacs-lisp
+#   (starter-kit-load "starter-kit-bindings.org")
+#   #+end_src
 
-- Miscellaneous settings in [[file:starter-kit-misc.org][starter-kit-misc]]
-  #+begin_src emacs-lisp
-  (starter-kit-load "starter-kit-misc.org")
-  #+end_src
+# - Miscellaneous settings in [[file:starter-kit-misc.org][starter-kit-misc]]
+#   #+begin_src emacs-lisp
+#   (starter-kit-load "starter-kit-misc.org")
+#   #+end_src
 
 # - Registers for jumping to commonly used files in [[file:starter-kit-registers.org][starter-kit-registers]]
 #   #+begin_src emacs-lisp
@@ -463,3 +453,12 @@ everyone using the starter kit.
 #   #+RESULTS:
 #   : Loaded /home/rks/literalemacs/starter-kit-registers.el
 
+*** Truncate Line
+   :PROPERTIES:
+   :CUSTOM_ID: starter-kit-truncate
+   :END:
+
+ #+NAME: starter-kit-truncate
+ #+BEGIN_SRC emacs-lisp
+ (setq-default truncate-lines nil)
+ #+END_SRC
