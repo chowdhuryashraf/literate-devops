@@ -1,19 +1,4 @@
 * Tasks
-** TODO [[Automating Releases with semantic-release][Automating Releases with semantic-release]]
-   CLOCK: [2016-01-12 মঙ্গল 21:18]--[2016-01-13 Wed 00:18] =>  3:00
-   [[file:~/literate-emacs/starter-kit-org.org]]
-*** git push http to git workflow
-** TODO Practice Org mode
-[[https://eschulte.github.io/org-scraps/][scrap examples]]
-[[http://emacs-doctor.com/learn-emacs-lisp-in-15-minutes.html][learn emacs lisp in 15 minutes]]
-   [2016-01-13 Wed]
-   [[file:/usr/local/src/microlibrary/friends-aneesha/setup.org::*Add%20npm%20user][Add npm user]]
-** TODO Saving a macro
-Emacs provides a number of functions to save macros for use in future sessions:
-
-M-x kmacro-name-last-macro, bound to C-x C-k n, gives a command name to the last defined macro. As explained above, the macro can then be called by typing M-x name-of-the-macro.
-   [2016-01-18 Mon]
-   [[file:/usr/local/src/microlibrary/friends-aneesha/setup.org::*Prepare%20Moudle%20Name%20%3D%20directory%20name][Prepare Moudle Name = directory name]]
 ** TODO create org sh
 #+BEGIN_SRC elisp
 (fset 'orgsh

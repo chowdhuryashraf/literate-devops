@@ -348,6 +348,46 @@ Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
 is not present.
 
+**** Emacs Setup For Arch
+#+NAME: ealiasarch
+#+begin_src sh
+alias emd='emacs --daemon'
+alias e='emacsclient -t'
+alias ec='emacsclient -c'
+alias vim='emacsclient -t'
+alias vi='emacsclient -t'
+#set -x TERM xterm-256color
+#+end_src
+
+#+call: wrap("ealiasarch") :results raw
+
+
+#+call: fwrite("~/.bashrc", ealias_txt())
+
+#+RESULTS:
+  - Wrap ealiasarch
+#+NAME: ealiasarch_txt
+#+BEGIN_SRC python :session :noweb yes
+"""
+<<ealiasarch>>
+"""
+#+END_SRC
+
+#+call: fwrite("~/.config/fish/config.fish", ealiasarch_txt())
+
+#+RESULTS:
+: nil
+#+call: fread("~/.config/fish/config.fish")
+
+#+RESULTS:
+:
+: alias emd='emacs --daemon'
+: alias e='emacsclient -t'
+: alias ec='emacsclient -c'
+: alias vim='emacsclient -t'
+: alias vi='emacsclient -t'
+: #set -x TERM xterm-256color
+
 * Implementation
   :PROPERTIES:
   :CUSTOM_ID: implementation
