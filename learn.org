@@ -63,6 +63,74 @@ emacs --batch --load ~/.emacs \
       --eval "(progn (require 'org-mobile) (org-mobile-push))"
 ** org updown M-S-<up> and M-S-<down>
 * Lisp
+** Elisp Cookbook
+*** String
+#+BEGIN_SRC elisp
+(zerop (string-match "" ""))
+(string-equal "A" "A")
+(equal "AAA" "AAA")
+(zerop (length "  "))
+(length "  ")
+(eq ""  "")
+(eq "" (purecopy ""))
+(eq "" (propertize "" 'face 'italic))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** String vs Buffer txt
+**** Substring
+#+BEGIN_SRC elisp
+  (substring "abcdefg" 0 3)
+  (substring "abcdefg" -3 -1)
+  (with-temp-buffer (insert "abcdefg")
+                    (buffer-substring 2 4))
+#+END_SRC
+**** Start-with and ends-with predicates
+#+BEGIN_SRC elisp
+    (defun string/ends-with (s ending)
+      " Return non-nil if string S ends with ENDING."
+      (cond ((>= (length s)  (length ending))
+             (let ((elength (length ending)))
+               (string= (substring s (- 0 elength)) ending)))
+            (t nil)))
+    (string/ends-with "hello" "ll")
+    (defun string/starts-with (s begins)
+      "Return non-nil if string S starts with BEGINS."
+      (cond ((>= (length s) (length begins))
+             (string-equal (substring s 0  (length begins)) begins))
+            (t nil)))
+        (string/starts-with "ABC" "A")
+      (defun string/ends-withmac (string suffix)
+      "Return t if STRING ends with SUFFIX."
+      (and (string-match (rx-to-string `(: ,suffix eos) t) string) t))
+      (string/ends-withmac "hello" "llo")
+
+    (defun string/starts-with (string prefix)
+    "Return t if STRING starts with prefix."
+    (and (string-match (rx-to-string `(: bos ,prefix) t) string) t))
+#+END_SRC
+**** Processing characters
+#+BEGIN_SRC elisp
+  (defun string/reverse (str)
+    "Reverse the str where str is a string"
+    (apply #'string (reverse (string-to-list str))))
+(string/reverse "hello World")
+#+END_SRC
+**** Looking at characters in a temporary buffer
+#+BEGIN_SRC elisp
+  (with-temp-buffer
+    (insert "abcdefg")
+    (goto-char (point-min))
+    (while (not (= (char-after) ?b)) (forward-char)) (point))
+#+END_SRC
+**** Trim whitespace
+#+BEGIN_SRC elisp
+(setq test-str "abcdefg   ")
+(when (string-match "[ \t]*$" test-str)
+(message (concat "[" (replace-match "ABC" nil nil test-str) "]")))
+#+END_SRC
 ** find file
 #+BEGIN_SRC elisp
 (defun gtd ()
@@ -95,50 +163,7 @@ I really like this idea, because it’s dumb to make me hit C-x C-s all the time
           (basic-save-buffer)))))
 (add-hook 'auto-save-hook 'full-auto-save)
 #+END_SRC
-** Color Theme
-- Colur Themes
-#+NAME: starter-kit-set-color-theme
-#+BEGIN_SRC emacs-lisp
-(require 'color-theme)
-(setq color-theme-is-global t)
-;; (color-theme-initialize)
-
-
-(load "color-theme-zenburn")
-(load "color-theme-tangotango")
-;;(load "color-theme-ujelly")
-
-
-(setq ash-color-themes (list
-  'color-theme-tangotango
-  'color-theme-zenburn
-))
-
-(defun ash-theme-set-default () ; Set the first row
-      (interactive)
-      (setq theme-current ash-color-themes)
-      (funcall (car theme-current)))
-
-(defun ash-describe-theme () ; Show the current theme
-  (interactive)
-  (message "%s" (car theme-current)))
-
-   ; Set the next theme (fixed by Chris Webber - tanks)
-(defun ash-theme-cycle ()
-  (interactive)
-  (setq theme-current (cdr theme-current))
-  (if (null theme-current)
-      (setq theme-current ash-color-themes))
-  (funcall (car theme-current))
-  (message "%S" (car theme-current)))
-
-(setq theme-current ash-color-themes)
-(setq color-theme-is-global nil) ; Initialization
-(ash-theme-set-default)
-(global-set-key [f4] 'ash-theme-cycle)
-#+END_SRC
-
-** Keyboard Macro [8/9]
+** Keyboard Macro [8/9]                                               :MACRO:
         - [X] f3 start
         - [X] f4 end
         - [X] c-x e - execute
