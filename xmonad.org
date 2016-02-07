@@ -4,7 +4,12 @@ This guide will work for every distro, but because I'm using Arch Linux, I will 
 xmobar and trayer.
 
 To install them in Arch Linux, run this command:
-#+call: cmdaync("sudo pacman -S xmonad xmonad-contrib xmobar trayer")
+
+#+NAME: xmonad_install
+#+BEGIN_SRC sh
+ pacman -S xmonad xmonad-contrib xmobar trayer
+#+END_SRC
+
 
 ** start xmonad automatically
 To start xmonad automatically, simply add the command exec xmonad to your startup script ( ~/.xinitrc). To set a cursor for the xmonad desktop, add the following

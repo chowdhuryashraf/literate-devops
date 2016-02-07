@@ -1040,13 +1040,25 @@ luis:x:1000:1000::/home/luis:/usr/bin/fish
 ashik:x:1001:100::/home/ashik:/usr/bin/fish
 #+end_example
 
-#+call: add
-** DONE set passwd
-   CLOSED: [2016-01-24 Sun 04:18]
-#+BEGIN_SRC sh
+** TODO set passwd
+#+NAME: passwd
+#+BEGIN_SRC sh :noweb yes
 passwd luis
 #+END_SRC
-* OPTIONAL nVIDIA
+
+#+CALL: wrap("passwd") :results raw
+
+#+RESULTS:
+  - Wrap passwd
+
+#+NAME: passwd_txt
+#+BEGIN_SRC python :session :noweb yes
+"""
+<<passwd>>
+"""
+#+END_SRC
+
+* TODO nVIDIA
 We can check that the nVIDIA driver works ok even without having X Windows, so let’s do that:
 ** install
 #+BEGIN_SRC sh
@@ -1055,8 +1067,7 @@ pacman -S nvidia
 
 * DONE Reset
   CLOSED: [2016-01-23 Sat 22:59]
-** DONE passwd
-   CLOSED: [2016-01-24 Sun 03:54]
+** TODO passwd
 ** DONE exit
    CLOSED: [2016-01-24 Sun 03:54]
 - exit
@@ -1068,8 +1079,8 @@ pacman -S nvidia
    CLOSED: [2016-01-23 Sat 23:02]
 - systemctl reboot
 
-* OPTIONAL Fix Resulation
-The console will now show up in 640x480 resolution so let’s change that to something nicer. For that we need to know what resolutions our graphics card can handle and
+* TODO Fix Resulation
+ The console will now show up in 640x480 resolution so let’s change that to something nicer. For that we need to know what resolutions our graphics card can handle and
 for that we need a tool called hwinfo
 **  hwinfo and fix framebuffer
 #+BEGIN_SRC sh
@@ -1138,14 +1149,12 @@ Mode 0x0361: 1280x800 (+5120), 24 bits
 Config Status: cfg=new, avail=yes, need=no, active=unknown
 #+END_EXAMPLE
 
-* DONE X windows and xmonad
-  CLOSED: [2016-01-24 Sun 07:17]
+* TODO X windows and xmonad
 
 We’ll be installing a window manager, as opposed to a full desktop environment. It’s a good idea to understand the differences between the two. For me, the main reason
 to go for a window manager was really performance.
-** DONE xorg installations
-   CLOSED: [2016-01-24 Sun 02:59]
-#+NAME:
+** TODO xorg installations
+#+NAME: xorginstallation
 #+BEGIN_SRC sh
 pacman -S xorg-server xorg-server-utils xorg-apps xorg-xinit  xscreensaver feh ttf-inconsolata
 #+END_SRC
@@ -1193,9 +1202,13 @@ xterm*faceName: Inconsolata:size=10:antialias=true
 """
 #+END_SRC
 
-** DONE Xmonad installation
-   CLOSED: [2016-01-24 Sun 03:01]
-#+call: cmdaync("pacman -S xmonad xmonad-contrib cabal-install xmobar ghc haddock gmrun dmenu")
+** TODO Xmonad installation
+#+NAME: xmonad_installation
+#+BEGIN_SRC sh
+pacman -S xmonad xmonad-contrib cabal-install xmobar ghc haddock gmrun dmenu trayer
+#+END_SRC
+#+CALL: async("xmonad_installation")
+
 ** DONE Configaring
    CLOSED: [2016-01-24 Sun 03:01]
 The default configuration is a bit too white so let’s change it.
