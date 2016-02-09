@@ -1169,7 +1169,7 @@ Section "Device"
 EndSection
 #+END_EXAMPLE
 
-** DONE Next I configured the terminal to use the inconsolata font
+** DONE Configured the terminal to use the inconsolata font
    CLOSED: [2016-01-24 Sun 03:01]
 
 #+CALL: addcodetofile(inconsolata_txt(), "~/.Xresources")

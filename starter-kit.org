@@ -388,6 +388,13 @@ alias vi='emacsclient -t'
 : alias vi='emacsclient -t'
 : #set -x TERM xterm-256color
 
+**** Link custom.el
+#+BEGIN_SRC sh
+ln -s  /usr/local/src/prelude/personal/custom.el /usr/local/src/literate-devops
+#+END_SRC
+
+#+RESULTS:
+
 * Implementation
   :PROPERTIES:
   :CUSTOM_ID: implementation

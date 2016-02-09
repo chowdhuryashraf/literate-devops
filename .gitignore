@@ -5,7 +5,6 @@ emacs_starter.sh
 ## misc
 loaddefs.el*
 auto-save-list
-custom.el
 places
 .svn
 .DS_Store
@@ -29,7 +28,6 @@ url/*
 
 ## exported and encrypted files
 *gpg
-*el
 *elc
 *html
 *tex
@@ -61,3 +59,4 @@ agent/*
 literate-starter-kit/
 literate-starter-kit.tar
 /pipeserver
+/starter-kit.el
