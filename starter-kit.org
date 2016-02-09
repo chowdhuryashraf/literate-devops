@@ -232,7 +232,7 @@ ls ~/org
 #+call: fread("em.sh")
 
 #+RESULTS:
-: 
+:
 : emacs -q -l /usr/local/src/literate-devops/init.el --eval "(run-hooks 'after-init-hook)" $1
 
 *** Install in Desktop
@@ -301,7 +301,7 @@ ls -l prelude
    :PROPERTIES:
    :dir: /usr/local/src/prelude
    :END:
-
+***** place module
 #+BEGIN_SRC sh :var file=sample-mod
 cp sample/$file .
 ls $file
@@ -317,6 +317,65 @@ ls sample
 
 #+RESULTS: sample-mod
 : prelude-modules.el
+***** copy custom
+#+NAME: customprelude
+#+BEGIN_SRC emacs-lisp
+;;; hello
+(setq starter-kit-dir "~/org")
+(org-babel-load-file (expand-file-name "starter-kit.org" starter-kit-dir))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(js2-basic-offset 2))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+#+END_SRC
+
+#+call: wrap("customprelude") :results raw
+
+#+NAME: customprelude_write
+#+BEGIN_SRC python :session :noweb yes  :post fwrite("custom.el1",*this*)
+"""
+<<customprelude>>
+"""
+#+END_SRC
+
+#+RESULTS: customprelude_write
+: nil
+
+#+call: fwrite("custom.el",customprelude_write())
+
+#+RESULTS:
+: nil
+
+#+call: fread("custom.el1")
+
+#+RESULTS:
+#+begin_example
+
+;;; hello
+(setq starter-kit-dir "~/org")
+(org-babel-load-file (expand-file-name "starter-kit.org" starter-kit-dir))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(js2-basic-offset 2))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+#+end_example
+
 ***** TODO backup & link [[~/.emacs.d][emacs.d]]
 Conn't be done inside emacs
 #+BEGIN_SRC sh
