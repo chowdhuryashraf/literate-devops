@@ -79,6 +79,43 @@ emacs --batch --load ~/.emacs \
 #+RESULTS:
 : t
 
+*** tutorial
+#+BEGIN_SRC emacs-lisp
+;;; test.el starts here
+
+(defun ev(n) (if (= (% n 2) 0) "even" "odd"))
+;;; C-u C-M-x C-u C-M-x
+(defun hello(name)
+  (let ((name (upcase name))) (message "Hello, %s!" name)))
+(defun pick-a-word (n)
+  (cond
+   ((= n 1) "one")
+   ((= n 2) "two")
+   (t "hello")))
+
+(defun factorial (n)
+  (if (< n 1) 1 (* n (factorial (- n 1)) )))
+
+(defun qs (list)
+  (if (null list)
+      '()
+    (let* (pivot (car list))
+      (rest (cdr list))
+      (lesser (remove-if-not
+               (lambda (x) (<= x pivot)) rest ))
+      (greater (remove-if-not (lambda (x) (> x pivot) ) rest))
+      (append (qs lesser) '( pivot) (qs greater))
+      )))
+(global-set-key (kbd "M-e") 'sort-lines)
+
+(add-hook 'c-mode-common-hook (lambda () (local-set-key (kbd '<f5>) 'recompile)))
+(defun insertlinebefor ()
+  "insert line before"
+  (interactive)
+  (save-excursion (move-beginning-of-line 1)(newline)))
+(global-set-key (kbd "C-S-m") 'insertlinebefor)
+
+#+END_SRC
 *** String vs Buffer txt
 **** Substring
 #+BEGIN_SRC elisp

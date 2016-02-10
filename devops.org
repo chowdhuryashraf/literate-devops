@@ -258,6 +258,14 @@ pipe="/tmp/"$mod
     (buffer-string))
 #+END_SRC
 * Curry
+** Multiline
+#+BEGIN_SRC js :cmd "babel-node"
+return ```
+HEllo
+WOrld
+abcdefgh
+```
+#+END_SRC
 ** Clujure
 #+BEGIN_SRC js :cmd "babel-node"
   var digit_name = (function (n) {

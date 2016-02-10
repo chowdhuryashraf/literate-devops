@@ -46,6 +46,9 @@ much more like reading and editing of code using its major mode.
   (setq org-src-tab-acts-natively t)
 #+end_src
 
+#+RESULTS:
+: t
+
 ** TODO Load Babel Libraries
    :PROPERTIES:
    :CUSTOM_ID: code-block-org-devops
@@ -57,7 +60,7 @@ much more like reading and editing of code using its major mode.
 #+END_SRC
 
 #+RESULTS:
-: 19
+: 22
 
 ** Org-Mode Hook -- Keybindings
    :PROPERTIES:
@@ -340,7 +343,7 @@ ls sample
 #+call: wrap("customprelude") :results raw
 
 #+NAME: customprelude_write
-#+BEGIN_SRC python :session :noweb yes  :post fwrite("custom.el1",*this*)
+#+BEGIN_SRC python :session :noweb yes  :post fwrite("custom.el",*this*)
 """
 <<customprelude>>
 """
@@ -354,27 +357,9 @@ ls sample
 #+RESULTS:
 : nil
 
-#+call: fread("custom.el1")
+#+call: fread("custom.el")
 
-#+RESULTS:
-#+begin_example
 
-;;; hello
-(setq starter-kit-dir "~/org")
-(org-babel-load-file (expand-file-name "starter-kit.org" starter-kit-dir))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(js2-basic-offset 2))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-#+end_example
 
 ***** TODO backup & link [[~/.emacs.d][emacs.d]]
 Conn't be done inside emacs
