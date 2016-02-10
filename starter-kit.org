@@ -49,35 +49,40 @@ much more like reading and editing of code using its major mode.
 #+RESULTS:
 : t
 
-** TODO Load Babel Libraries
+** TODO Load Babel Libraries                                         :DEVOPS:
    :PROPERTIES:
    :CUSTOM_ID: code-block-org-devops
    :END:
 
 #+BEGIN_SRC emacs-lisp :var path="/usr/local/src/literate-devops/devops.org"
-;(org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
-(org-babel-lob-ingest (expand-file-name path))
+(org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
+; (org-babel-lob-ingest (expand-file-name path))
 #+END_SRC
 
 #+RESULTS:
-: 22
+: 19
 
 ** Org-Mode Hook -- Keybindings
    :PROPERTIES:
    :CUSTOM_ID: keybindings
    :END:
 #+begin_src emacs-lisp
+  (defun devops()
+    (interactive)
+    (org-babel-lob-ingest (expand-file-name "~/org/devops.org")))
   (add-hook 'org-mode-hook
             (lambda ()
-              (local-set-key "\M-\C-n" 'outline-next-visible-heading)
-              (local-set-key "\M-\C-p" 'outline-previous-visible-heading)
-              (local-set-key "\M-\C-u" 'outline-up-heading)
-              ;; table
-              (local-set-key "\M-\C-w" 'org-table-copy-region)
-              (local-set-key "\M-\C-y" 'org-table-paste-rectangle)
-              (local-set-key "\M-\C-l" 'org-table-sort-lines)
-              ;; display images
-              (local-set-key "\M-I" 'org-toggle-iimage-in-org)))
+                (local-set-key "\M-\C-n" 'outline-next-visible-heading)
+                (local-set-key "\M-\C-p" 'outline-previous-visible-heading)
+                (local-set-key "\M-\C-u" 'outline-up-heading)
+                ;; table
+                (local-set-key "\M-\C-w" 'org-table-copy-region)
+                (local-set-key "\M-\C-y" 'org-table-paste-rectangle)
+                (local-set-key "\M-\C-l" 'org-table-sort-lines)
+
+                ;; display images
+                (local-set-key "\M-I" 'org-toggle-iimage-in-org)))
+
 #+end_src
 
 ** Speed keys
@@ -272,55 +277,87 @@ loading, so if you've having trouble loading it, make sure that file
 is not present.
 
 *** Configure Prelude
-**** clone  backup previous
+**** clone  backup previous						 :CD:
    :PROPERTIES:
    :dir: /usr/local/src
    :END:
-#+BEGIN_SRC sh :results replace
+#+NAME: prelude_git
+#+BEGIN_SRC sh
 git clone git://github.com/bbatsov/prelude.git
 #+END_SRC
 
-#+RESULTS:
+#+call: wrap("prelude_git", "aync") :results raw
 
-#+BEGIN_SRC sh
-ls -l prelude
+#+RESULTS:
+#+NAME: prelude_git_aync
+#+BEGIN_SRC python :session :noweb yes :post cmdaync(*this*)
+"""<<prelude_git>>"""
 #+END_SRC
 
-#+RESULTS:
-| total      | 72 |      |      |       |     |    |       |                    |
-| -rw-r--r-- |  1 | root | root |  1374 | Jan | 22 | 18:07 | CONTRIBUTING.md    |
-| -rw-r--r-- |  1 | root | root | 26772 | Jan | 22 | 18:07 | README.md          |
-| drwxr-xr-x |  2 | root | root |  4096 | Jan | 22 | 18:07 | core               |
-| -rw-r--r-- |  1 | root | root |  5317 | Jan | 22 | 18:07 | init.el            |
-| drwxr-xr-x |  3 | root | root |  4096 | Jan | 22 | 18:07 | modules            |
-| drwxr-xr-x |  3 | root | root |  4096 | Jan | 22 | 18:07 | personal           |
-| -rw-r--r-- |  1 | root | root |  1280 | Jan | 22 | 18:09 | prelude-modules.el |
-| drwxr-xr-x |  2 | root | root |  4096 | Jan | 22 | 18:07 | sample             |
-| drwxr-xr-x |  2 | root | root |  4096 | Jan | 22 | 18:07 | themes             |
-| drwxr-xr-x |  2 | root | root |  4096 | Jan | 22 | 18:07 | utils              |
-| drwxr-xr-x |  2 | root | root |  4096 | Jan | 22 | 18:07 | vendor             |
+#+RESULTS: prelude_git_aync
+: command  is sended to /tmp/src
 
-**** configure
+**** configure								 :CD:
    :PROPERTIES:
    :dir: /usr/local/src/prelude
    :END:
-***** place module
-#+BEGIN_SRC sh :var file=sample-mod
-cp sample/$file .
-ls $file
+***** Add Important Modules
+#+NAME: prelude-modules
+#+BEGIN_SRC emacs-lisp
+;;; Uncomment the modules you'd like to use and restart Prelude afterwards
+
+;; Emacs IRC client
+(require 'prelude-erc)
+(require 'prelude-ido) ;; Super charges Emacs completion for C-x C-f and more
+(require 'prelude-helm) ;; Interface for narrowing and search
+(require 'prelude-helm-everywhere) ;; Enable Helm everywhere
+(require 'prelude-company)
+(require 'prelude-key-chord) ;; Binds useful features to key combinations
+;; (require 'prelude-mediawiki)
+;; (require 'prelude-evil)
+
+;;; Programming languages support
+(require 'prelude-c)
+(require 'prelude-clojure)
+(require 'prelude-coffee)
+(require 'prelude-common-lisp)
+(require 'prelude-css)
+(require 'prelude-emacs-lisp)
+(require 'prelude-erlang)
+(require 'prelude-elixir)
+(require 'prelude-go)
+(require 'prelude-haskell)
+(require 'prelude-js)
+(require 'prelude-latex)
+(require 'prelude-lisp)
+(require 'prelude-ocaml)
+(require 'prelude-org) ;; Org-mode helps you keep TODO lists, notes and more
+(require 'prelude-perl)
+(require 'prelude-python)
+(require 'prelude-ruby)
+(require 'prelude-scala)
+(require 'prelude-scheme)
+(require 'prelude-shell)
+(require 'prelude-scss)
+(require 'prelude-web) ;; Emacs mode for web templates
+(require 'prelude-xml)
+(require 'prelude-yaml)
 #+END_SRC
+
+#+call: wrap("prelude-modules","fwrite","prelude-modules.el") :results raw
 
 #+RESULTS:
-: prelude-modules.el
-
-#+NAME: sample-mod
-#+BEGIN_SRC sh
-ls sample
+#+NAME: prelude-modules_fwrite
+#+BEGIN_SRC python :session :noweb yes :post fwrite("prelude-modules.el",*this*)
+"""
+<<prelude-modules>>
+"""
 #+END_SRC
-
-#+RESULTS: sample-mod
-: prelude-modules.el
-***** copy custom
+0
+***** Add devops and orgmode
+:PROPERTIES:
+:DIR: /usr/local/src/literate-devops/
+:END:
 #+NAME: customprelude
 #+BEGIN_SRC emacs-lisp
 ;;; hello
@@ -340,45 +377,28 @@ ls sample
  )
 #+END_SRC
 
-#+call: wrap("customprelude") :results raw
+#+call: wrap("customprelude","fwrite","custom.el") :results raw
 
-#+NAME: customprelude_write
-#+BEGIN_SRC python :session :noweb yes  :post fwrite("custom.el",*this*)
+#+RESULTS:
+#+NAME: customprelude_fwrite
+#+BEGIN_SRC python :session :noweb yes :post fwrite("custom.el",*this*)
 """
 <<customprelude>>
 """
 #+END_SRC
 
-#+RESULTS: customprelude_write
-: nil
-
-#+call: fwrite("custom.el",customprelude_write())
-
-#+RESULTS:
+#+RESULTS: customprelude_fwrite
 : nil
 
 #+call: fread("custom.el")
 
-
-
-***** TODO backup & link [[~/.emacs.d][emacs.d]]
-Conn't be done inside emacs
+***** Link literate-devops to prelude configaration
 #+BEGIN_SRC sh
-mv ~/.emacs.d ~/backups/
-ls -la ~/.emacs.d
+ln -s   /usr/local/src/literate-devops/custom.el /usr/local/src/prelude/personal/custom.el
 #+END_SRC
 
-#+BEGIN_SRC sh :noweb yes
-dr=`pwd`
-ln -s $dr ~/.emacs.d
-ls -l ~/.emacs.d
-#+END_SRC
-
-**** Add starter kit                                                :PRELUDE:
-#+BEGIN_SRC sh
-cp custom.el ~/.emacs.d/personal
-#+END_SRC
-**** Emacs Setup For Debain
+#+RESULTS:
+***** Emacs Setup For Debain
 #+NAME: ealias
 #+begin_src sh
 alias emd='emacs --daemon'
@@ -389,22 +409,28 @@ alias vi='emacsclient -t'
 export TERM=xterm-256color
 #+end_src
 
-#+call: wrap("ealias") :results raw
+#+BEGIN_SRC sh
+cat ~/.bashrc
+#+END_SRC
 
 #+RESULTS:
-  - Wrap ealias
-#+NAME: ealias_txt
-#+BEGIN_SRC python :session :noweb yes
+
+#+call: wrap("ealias","fwrite","~/.bashrc") :results raw
+
+
+#+call: fread("~/.bashrc")
+
+#+RESULTS:
+#+NAME: ealias_fwrite
+#+BEGIN_SRC python :session :noweb yes :post fwrite("~/.bashrc",*this*)
 """
 <<ealias>>
 """
 #+END_SRC
 
-
-#+call: fwrite("~/.bashrc", ealias_txt())
-
-#+RESULTS:
+#+RESULTS: ealias_fwrite
 : nil
+
 #+call: fread("~/.bashrc")
 
 #+RESULTS:
@@ -416,11 +442,7 @@ export TERM=xterm-256color
 : alias vi='emacsclient -t'
 : export TERM=xterm-256color
 
-Note that having a =~/.emacs= file might override the starter kit
-loading, so if you've having trouble loading it, make sure that file
-is not present.
-
-**** Emacs Setup For Arch
+***** Emacs Setup For Arch
 #+NAME: ealiasarch
 #+begin_src sh
 alias emd='emacs --daemon'
@@ -460,124 +482,36 @@ alias vi='emacsclient -t'
 : alias vi='emacsclient -t'
 : #set -x TERM xterm-256color
 
-**** Link custom.el
+***** backup exising [[~/.emacs.d][emacs.d]] and link prelude
 #+BEGIN_SRC sh
-ln -s  /usr/local/src/prelude/personal/custom.el /usr/local/src/literate-devops
+mv ~/.emacs.d ~/backups/
+ls -la ~/.emacs.d
 #+END_SRC
 
 #+RESULTS:
 
-* Implementation
-  :PROPERTIES:
-  :CUSTOM_ID: implementation
-  :END:
-
-This section contains all code implementing the Emacs Starter Kit.  It
-is probably safe to stop reading at this point unless you are
-interested in the actual code implementing the starter kit.
-
-- Function for loading other parts of the starter kit
-  #+name: starter-kit-load
-  #+begin_src emacs-lisp
-    (defun starter-kit-load (file &optional header-or-tag)
-      "Load configuration from other starter-kit-*.org files.
-    If the optional argument is the id of a subtree then only
-    configuration from within that subtree will be loaded.  If it is
-    not an id then it will be interpreted as a tag, and only subtrees
-    marked with the given tag will be loaded.
-
-    For example, to load all of starter-kit-lisp.org simply
-    add (starter-kit-load \"lisp\") to your configuration.
-
-    To load only the 'window-system' config from
-    starter-kit-misc-recommended.org add
-     (starter-kit-load \"misc-recommended\" \"window-system\")
-    to your configuration."
-      (let ((file (expand-file-name (if (string-match "starter-kit-.+\.org" file)
-                                        file
-                                      (format "starter-kit-%s.org" file))
-                                    starter-kit-dir)))
-        (org-babel-load-file
-         (if header-or-tag
-             (let* ((base (file-name-nondirectory file))
-                    (dir  (file-name-directory file))
-                    (partial-file (expand-file-name
-                                   (concat "." (file-name-sans-extension base)
-                                           ".part." header-or-tag ".org")
-                                   dir)))
-               (unless (file-exists-p partial-file)
-                 (with-temp-file partial-file
-                   (insert
-                    (with-temp-buffer
-                      (insert-file-contents file)
-                      (save-excursion
-                        (condition-case nil ;; collect as a header
-                            (progn
-                              (org-link-search (concat"#"header-or-tag))
-                              (org-narrow-to-subtree)
-                              (buffer-string))
-                          (error ;; collect all entries with as tags
-                           (let (body)
-                             (org-map-entries
-                              (lambda ()
-                                (save-restriction
-                                  (org-narrow-to-subtree)
-                                  (setq body (concat body "\n" (buffer-string)))))
-                              header-or-tag)
-                             body))))))))
-               partial-file)
-           file))))
-  #+end_src
-
-- Remove Menu bar, tool bar, start up messages
- #+NAME: starter-kit-remove_unnecessary
- #+BEGIN_SRC emacs-lisp
-  (when window-system
-    (tooltip-mode -1)
-    (tool-bar-mode -1)
-    (menu-bar-mode -1)
-    (scroll-bar-mode -1))
-  (setq inhibit-startup-message t)
+#+BEGIN_SRC sh :noweb yes
+dr=`pwd`
+ln -s /usr/local/src/prelude ~/.emacs.d
+ls -l ~/.emacs.d
 #+END_SRC
 
+#+RESULTS:
+: lrwxrwxrwx 1 root root 22 ফেব্রু  10 21:39 /root/.emacs.d -> /usr/local/src/prelude
 
-** Starter kit core
-   :PROPERTIES:
-   :CUSTOM_ID: starter-kit-core
-   :END:
-The following files contain the remainder of the core of the Emacs
-Starter Kit.  All of the code in this section should be loaded by
-everyone using the starter kit.
+***** Run Prelude for the First time
+#+NAME: emacs
+#+BEGIN_SRC sh
+emacs
+#+END_SRC
 
-# - Starter kit function definitions in [[file:starter-kit-defuns.org][starter-kit-defuns]]
-#   #+begin_src emacs-lisp
-#   (starter-kit-load "starter-kit-defuns.org")
-#   #+end_src
+#+call: wrap("emacs","aync") :results raw
 
-# - Key Bindings in [[file:starter-kit-bindings.org][starter-kit-bindings]]
-#   #+begin_src emacs-lisp
-#   (starter-kit-load "starter-kit-bindings.org")
-#   #+end_src
+#+RESULTS:
+#+NAME: emacs_aync
+#+BEGIN_SRC python :session :noweb yes :post cmdaync(*this*)
+"""<<emacs>>"""
+#+END_SRC
 
-# - Miscellaneous settings in [[file:starter-kit-misc.org][starter-kit-misc]]
-#   #+begin_src emacs-lisp
-#   (starter-kit-load "starter-kit-misc.org")
-#   #+end_src
-
-# - Registers for jumping to commonly used files in [[file:starter-kit-registers.org][starter-kit-registers]]
-#   #+begin_src emacs-lisp
-#   (starter-kit-load "starter-kit-registers.org")
-#   #+end_src
-
-#   #+RESULTS:
-#   : Loaded /home/rks/literalemacs/starter-kit-registers.el
-
-*** Truncate Line
-   :PROPERTIES:
-   :CUSTOM_ID: starter-kit-truncate
-   :END:
-
- #+NAME: starter-kit-truncate
- #+BEGIN_SRC emacs-lisp
- (setq-default truncate-lines nil)
- #+END_SRC
+#+RESULTS: emacs_aync
+: command  is sended to /tmp/prelude
