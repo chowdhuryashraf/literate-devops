@@ -51,9 +51,13 @@ much more like reading and editing of code using its major mode.
    :CUSTOM_ID: code-block-org-devops
    :END:
 
-#+BEGIN_SRC emacs-lisp
-(org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
+#+BEGIN_SRC emacs-lisp :var path="/usr/local/src/literate-devops/devops.org"
+;(org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
+(org-babel-lob-ingest (expand-file-name path))
 #+END_SRC
+
+#+RESULTS:
+: 19
 
 ** Org-Mode Hook -- Keybindings
    :PROPERTIES:
@@ -180,6 +184,7 @@ ls ~
 #+END_SRC
 
 #+RESULTS:
+: abc.wav
 
 *** Link [[~/org][org directory]]
 #+BEGIN_SRC sh :var path=pwd()
@@ -207,17 +212,40 @@ ls ~/org
 | usb                              |
 
 *** Tangle Code Block
-#+begin_src sh :var path=pwd()  :tangle emacs_starter.sh  :shebang #!/bin/bash
-  emacs -q -l $path/init.el \
-      --eval "(run-hooks 'after-init-hook)" $1
+#+NAME: initemacs
+#+begin_src sh :noweb yes
+  emacs -q -l <<pwd()>>/init.el --eval "(run-hooks 'after-init-hook)" $1
 #+end_src
+
+#+call: wrap("initemacs") :results raw
+
+#+NAME: initemacs_tofile
+#+BEGIN_SRC python :session :noweb yes :post fwrite("em.sh",*this*)
+"""
+<<initemacs>>
+"""
+#+END_SRC
+
+#+RESULTS: initemacs_tofile
+: nil
+
+#+call: fread("em.sh")
+
+#+RESULTS:
+:
+: emacs -q -l /usr/local/src/literate-devops/init.el --eval "(run-hooks 'after-init-hook)" $1
+
 *** Install in Desktop
 #+BEGIN_SRC sh :var path=pwd()   :dir /su:root@localhost:
-ls -la $path/emacs_starter.sh
-cp $path/emacs_starter.sh  /bin/em
+ls -la $path/em.sh
+cp $path/em.sh  /bin/em
 chmod 755 /bin/em
 ls -la /bin/em
 #+END_SRC
+
+#+RESULTS:
+| -rw-r--r-- | 1 | root | root | 93 | Feb | 9 | 22:00 | /usr/local/src/literate-devops/em.sh |
+| -rwxr-xr-x | 1 | root | root | 93 | Feb | 9 | 22:00 | /bin/em                              |
 
 Note that having a =~/.emacs= file might override the starter kit
 loading, so if you've having trouble loading it, make sure that file
@@ -273,7 +301,7 @@ ls -l prelude
    :PROPERTIES:
    :dir: /usr/local/src/prelude
    :END:
-
+***** place module
 #+BEGIN_SRC sh :var file=sample-mod
 cp sample/$file .
 ls $file
@@ -289,6 +317,65 @@ ls sample
 
 #+RESULTS: sample-mod
 : prelude-modules.el
+***** copy custom
+#+NAME: customprelude
+#+BEGIN_SRC emacs-lisp
+;;; hello
+(setq starter-kit-dir "~/org")
+(org-babel-load-file (expand-file-name "starter-kit.org" starter-kit-dir))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(js2-basic-offset 2))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+#+END_SRC
+
+#+call: wrap("customprelude") :results raw
+
+#+NAME: customprelude_write
+#+BEGIN_SRC python :session :noweb yes  :post fwrite("custom.el1",*this*)
+"""
+<<customprelude>>
+"""
+#+END_SRC
+
+#+RESULTS: customprelude_write
+: nil
+
+#+call: fwrite("custom.el",customprelude_write())
+
+#+RESULTS:
+: nil
+
+#+call: fread("custom.el1")
+
+#+RESULTS:
+#+begin_example
+
+;;; hello
+(setq starter-kit-dir "~/org")
+(org-babel-load-file (expand-file-name "starter-kit.org" starter-kit-dir))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(js2-basic-offset 2))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+#+end_example
+
 ***** TODO backup & link [[~/.emacs.d][emacs.d]]
 Conn't be done inside emacs
 #+BEGIN_SRC sh
@@ -387,6 +474,13 @@ alias vi='emacsclient -t'
 : alias vim='emacsclient -t'
 : alias vi='emacsclient -t'
 : #set -x TERM xterm-256color
+
+**** Link custom.el
+#+BEGIN_SRC sh
+ln -s  /usr/local/src/prelude/personal/custom.el /usr/local/src/literate-devops
+#+END_SRC
+
+#+RESULTS:
 
 * Implementation
   :PROPERTIES:
