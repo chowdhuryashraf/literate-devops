@@ -243,17 +243,26 @@ pipe="/tmp/"$mod
 * babel
 ** Wrap
 #+NAME: wrap
-#+BEGIN_SRC elisp :var snippet=""
-  (with-temp-buffer
-    (insert "  - Wrap ")
-    (insert snippet)
-    (insert "\n#+NAME: ")
-    (insert snippet)
-    (insert "_txt")
-    (insert "\n#+BEGIN_SRC python :session :noweb yes\n")
-    (insert "\"\"\"\n<<")
-    (insert snippet)
-    (insert ">>\n\"\"\"\n")
-    (insert "#+END_SRC")
-    (buffer-string))
+#+BEGIN_SRC js :var snippet="" :var process="txt" :var file="" :var post=""  :results raw
+  var gen_post = function () {
+      if (process === "aync") {
+          return ":post " + "cmdaync" +  "(" + "*this*" + ")";
+      } 
+      if (process === "fwrite"){ 
+          return ":post " + "fwrite" + "(" + '"' +  file + '"' + "," + "*this*" + ")";
+      }
+      return post;
+  };
+  var code = "#+NAME: " + snippet + "_" + process + "\n";
+  code = code + "#+BEGIN_SRC python :session :noweb yes "  + gen_post() + "\n";
+  code = code + '"""' + "\n" + '<<' + snippet + '>>' + "\n" + '"""' + "\n";
+  code = code + "#+END_SRC";
+  console.log(code);
+  return 0;
 #+END_SRC
+
+
+
+
+
+
