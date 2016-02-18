@@ -1,5 +1,5 @@
 ** Namepipe Server for receaving command
-#+BEGIN_SRC sh :mkdirp yes :tangle pipeserver :shebang #!/bin/bash :eval never  :noweb yes
+#+BEGIN_SRC sh :mkdirp yes :tangle bin/pipeserver :shebang #!/bin/bash :eval never  :noweb yes
     <<init_pipeserver>>
     <<init_pipe>>
     echo $param
@@ -14,16 +14,24 @@
     done
 #+END_SRC
 
-*** Execute *pipeserver*
-#+BEGIN_SRC sh
-ls -l pipeserver
-cp pipeserver /usr/bin/
-ls -l /usr/bin/pipeserver
+*** Place the file in bin/pipeserver
+#+BEGIN_SRC elisp
+(org-babel-tangle)
 #+END_SRC
 
 #+RESULTS:
-| -rwxr-xr-x | 1 | root | root | 380 | ফেব্রু | 9 | 22:52 | pipeserver          |
-| -rwxr-xr-x | 1 | root | root | 380 | ফেব্রু | 9 | 22:53 | /usr/bin/pipeserver |
+| bin/pipeserver |
+
+*** Execute *pipeserver*
+#+BEGIN_SRC sh :var path=pwd() :dir /sudo:root@localhost:/usr/local/bin
+ls -l $path/bin/pipeserver
+cp $path/bin/pipeserver /usr/local/bin/
+ls -l /usr/local/bin/pipeserver
+#+END_SRC
+
+#+RESULTS:
+| -rwxr-xr-x | 1 | mrfrp | staff | 380 | Feb | 18 | 00:55 | /Users/mrfrp/org/bin/pipeserver |
+| -rwxr-xr-x | 1 | root  | admin | 380 | Feb | 18 | 00:57 | /usr/local/bin/pipeserver       |
 
 *** Init Pipeserver Parameters
 #+NAME: init_pipeserver

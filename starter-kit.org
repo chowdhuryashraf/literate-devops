@@ -1,4 +1,4 @@
-#+TITLE: Emacs Starter Kit
+#+TITLE: Emacs Starter Kit (http://github.com/chowdhuryashraf/literate-devops)
 #+OPTIONS: toc:2 num:nil ^:nil
 * Org
 ** Code blocks
@@ -49,27 +49,26 @@ much more like reading and editing of code using its major mode.
 #+RESULTS:
 : t
 
-** TODO Load Babel Libraries                                         :DEVOPS:
+** Load Babel Libraries 					     :DEVOPS:
    :PROPERTIES:
    :CUSTOM_ID: code-block-org-devops
    :END:
 
-#+BEGIN_SRC emacs-lisp :var path="/usr/local/src/literate-devops/devops.org"
-(org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
-; (org-babel-lob-ingest (expand-file-name path))
+#+BEGIN_SRC emacs-lisp 
+  (org-babel-lob-ingest (expand-file-name "~/org/devops.org"))
+  (defun devops()
+      (interactive)
+      (org-babel-lob-ingest (expand-file-name "~/org/devops.org")))
 #+END_SRC
 
 #+RESULTS:
 : 19
-
+   
 ** Org-Mode Hook -- Keybindings
    :PROPERTIES:
    :CUSTOM_ID: keybindings
    :END:
 #+begin_src emacs-lisp
-  (defun devops()
-    (interactive)
-    (org-babel-lob-ingest (expand-file-name "~/org/devops.org")))
   (add-hook 'org-mode-hook
             (lambda ()
                 (local-set-key "\M-\C-n" 'outline-next-visible-heading)
@@ -82,7 +81,6 @@ much more like reading and editing of code using its major mode.
 
                 ;; display images
                 (local-set-key "\M-I" 'org-toggle-iimage-in-org)))
-
 #+end_src
 
 ** Speed keys
@@ -180,11 +178,12 @@ file using the `org-babel-lob-ingest' function.
    :CUSTOM_ID: installation
    :END:
 *** Introduction
-1. Install Emacs version 24 or greater.
-2. Checkout Literate devops
-   #+begin_src sh
-     git clone http://github.com/chowdhuryashraf/literate-devops /usr/local/src/
-   #+end_src
+**** TODO Install Emacs version 24 or greater. 
+***** TODO Installation In Linux Desktop
+****** TODO Arch Linux 
+****** TODO Debain / Ubuntu 
+***** TODO Installation In Linux Server 
+***** TODO Installation in Max OSX
 *** [[~/org][org directory]] backup
 #+BEGIN_SRC sh
 mv ~/org ~/backups
@@ -193,31 +192,6 @@ ls ~
 
 #+RESULTS:
 : abc.wav
-
-*** Link [[~/org][org directory]]
-#+BEGIN_SRC sh :var path=pwd()
-ln -s $path ~/org
-ls ~/org
-#+END_SRC
-
-#+RESULTS:
-| #starter-kit.org#                |
-| arch.org                         |
-| devops.org                       |
-| git.org                          |
-| init.el                          |
-| job                              |
-| learn.org                        |
-| linux.org                        |
-| notes.org                        |
-| ssh                              |
-| starter-kit-bindings.org         |
-| starter-kit-defuns.org           |
-| starter-kit-misc-recommended.org |
-| starter-kit-misc.org             |
-| starter-kit-org.org              |
-| starter-kit.org                  |
-| usb                              |
 
 *** Tangle Code Block
 #+NAME: initemacs
@@ -240,11 +214,21 @@ ls ~/org
 #+call: fread("em.sh")
 
 #+RESULTS:
-:
-: emacs -q -l /usr/local/src/literate-devops/init.el --eval "(run-hooks 'after-init-hook)" $1
+: 
+: emacs -q -l /Users/mrfrp/org/init.el --eval "(run-hooks 'after-init-hook)" $1
 
-*** Install in Desktop
-#+BEGIN_SRC sh :var path=pwd()   :dir /su:root@localhost:
+*** Minimal Emacs Configuretion
+**** On User or Desktop Environment
+#+BEGIN_SRC sh :var path=pwd()   :dir /sudo:root@localhost:/usr/local/bin
+  ls -la $path/em.sh
+  cp $path/em.sh  em
+  chmod 755 em
+#+END_SRC
+
+#+RESULTS:
+
+**** On Superuser / Server Environment
+#+BEGIN_SRC sh :var path=pwd()
 ls -la $path/em.sh
 cp $path/em.sh  /bin/em
 chmod 755 /bin/em
@@ -252,55 +236,65 @@ ls -la /bin/em
 #+END_SRC
 
 #+RESULTS:
-| -rw-r--r-- | 1 | root | root | 93 | Feb | 9 | 22:00 | /usr/local/src/literate-devops/em.sh |
-| -rwxr-xr-x | 1 | root | root | 93 | Feb | 9 | 22:00 | /bin/em                              |
-
-Note that having a =~/.emacs= file might override the starter kit
-loading, so if you've having trouble loading it, make sure that file
-is not present.
-
-*** Install in Server
-#+BEGIN_SRC sh :var path=pwd()
-ls -la $path/emacs_starter.sh
-cp $path/emacs_starter.sh  /bin/em
-chmod 755 /bin/em
-ls -la /bin/em
-#+END_SRC
-
-#+RESULTS:
-| -rwxr-xr-x | 1 | root | root | 158 | Jan | 22 | 18:06 | /usr/local/src/literate-devops/emacs_starter.sh |
+| -rwxr-xr-x | 1 | root | root | 158 | Jan | 22 | 18:06 | /usr/local/src/literate-devops/em.sh |
 | -rwxr-xr-x | 1 | root | root | 158 | Jan | 22 | 18:06 | /bin/em                                         |
 
-
-Note that having a =~/.emacs= file might override the starter kit
-loading, so if you've having trouble loading it, make sure that file
-is not present.
-
+*** Close emacs , Restart emacs using "em" command
+*** Build [[~/org/pipeserver.org][ PipeServer ]]
+*** Run "pipeserver" in command line
 *** Configure Prelude
-**** clone  backup previous						 :CD:
-   :PROPERTIES:
-   :dir: /usr/local/src
-   :END:
-#+NAME: prelude_git
-#+BEGIN_SRC sh
-git clone git://github.com/bbatsov/prelude.git
+**** clone  backup previous	
+***** Backup
+#+BEGIN_SRC sh :dir ~
+mv .emacs.d backup
 #+END_SRC
 
-#+call: wrap("prelude_git", "aync") :results raw
-
 #+RESULTS:
+***** Clone
+#+NAME: prelude_git
+#+BEGIN_SRC sh 
+git clone git://github.com/bbatsov/prelude.git prelude
+#+END_SRC
+
+***** Run Aync  
 #+NAME: prelude_git_aync
 #+BEGIN_SRC python :session :noweb yes :post cmdaync(*this*)
 """<<prelude_git>>"""
 #+END_SRC
 
 #+RESULTS: prelude_git_aync
-: command  is sended to /tmp/src
+: command  is sended to /tmp/org
 
-**** configure								 :CD:
-   :PROPERTIES:
-   :dir: /usr/local/src/prelude
-   :END:
+**** make aync and copy the results
+#+call: wrap("prelude_git", "aync") :results raw
+
+**** copy prelude to .emacs.d
+#+BEGIN_SRC sh
+ls ~/.emacs.d
+#+END_SRC
+
+#+RESULTS:
+: auto-save-list
+
+#+BEGIN_SRC sh
+mv prelude/* ~/.emacs.d
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh
+ls ~/.emacs.d/.git
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh
+mv prelude /tmp
+#+END_SRC
+
+#+RESULTS:
+
+**** configaration	
 ***** Add Important Modules
 #+NAME: prelude-modules
 #+BEGIN_SRC emacs-lisp
@@ -344,20 +338,20 @@ git clone git://github.com/bbatsov/prelude.git
 (require 'prelude-yaml)
 #+END_SRC
 
-#+call: wrap("prelude-modules","fwrite","prelude-modules.el") :results raw
-
-#+RESULTS:
 #+NAME: prelude-modules_fwrite
-#+BEGIN_SRC python :session :noweb yes :post fwrite("prelude-modules.el",*this*)
+#+BEGIN_SRC python :session :noweb yes :post fwrite("~/.emacs.d/prelude-modules.el",*this*)
 """
 <<prelude-modules>>
 """
 #+END_SRC
-0
+
+#+RESULTS: prelude-modules_fwrite
+: nil
+
+#+call: fread("~/.emacs.d/prelude-modules.el")
+
 ***** Add devops and orgmode
-:PROPERTIES:
-:DIR: /usr/local/src/literate-devops/
-:END:
+
 #+NAME: customprelude
 #+BEGIN_SRC emacs-lisp
 ;;; hello
@@ -377,11 +371,8 @@ git clone git://github.com/bbatsov/prelude.git
  )
 #+END_SRC
 
-#+call: wrap("customprelude","fwrite","custom.el") :results raw
-
-#+RESULTS:
 #+NAME: customprelude_fwrite
-#+BEGIN_SRC python :session :noweb yes :post fwrite("custom.el",*this*)
+#+BEGIN_SRC python :session :noweb yes :post fwrite("~/.emacs.d/personal/custom.el",*this*)
 """
 <<customprelude>>
 """
@@ -390,128 +381,76 @@ git clone git://github.com/bbatsov/prelude.git
 #+RESULTS: customprelude_fwrite
 : nil
 
-#+call: fread("custom.el")
+#+call: fread("~/.emacs.d/personal/custom.el")
 
-***** Link literate-devops to prelude configaration
-#+BEGIN_SRC sh
-ln -s   /usr/local/src/literate-devops/custom.el /usr/local/src/prelude/personal/custom.el
-#+END_SRC
-
-#+RESULTS:
 ***** Emacs Setup For Debain
+
 #+NAME: ealias
-#+begin_src sh
+#+begin_example
 alias emd='emacs --daemon'
 alias e='emacsclient -t'
 alias ec='emacsclient -c'
 alias vim='emacsclient -t'
 alias vi='emacsclient -t'
 export TERM=xterm-256color
-#+end_src
+#+end_example
 
-#+BEGIN_SRC sh
-cat ~/.bashrc
-#+END_SRC
-
-#+RESULTS:
-
-#+call: wrap("ealias","fwrite","~/.bashrc") :results raw
-
-
+#+call: fwrite("~/.bashrc",ealias)
 #+call: fread("~/.bashrc")
 
-#+RESULTS:
-#+NAME: ealias_fwrite
-#+BEGIN_SRC python :session :noweb yes :post fwrite("~/.bashrc",*this*)
-"""
-<<ealias>>
-"""
-#+END_SRC
+***** Emacs Setup For Arch Linux
 
-#+RESULTS: ealias_fwrite
-: nil
-
-#+call: fread("~/.bashrc")
-
-#+RESULTS:
-:
-: alias emd='emacs --daemon'
-: alias e='emacsclient -t'
-: alias ec='emacsclient -c'
-: alias vim='emacsclient -t'
-: alias vi='emacsclient -t'
-: export TERM=xterm-256color
-
-***** Emacs Setup For Arch
-#+NAME: ealiasarch
-#+begin_src sh
+#+NAME: ealias-arch
+#+begin_example
 alias emd='emacs --daemon'
 alias e='emacsclient -t'
 alias ec='emacsclient -c'
 alias vim='emacsclient -t'
 alias vi='emacsclient -t'
 #set -x TERM xterm-256color
-#+end_src
+#+end_example
 
-#+call: wrap("ealiasarch") :results raw
+#+call: fwrite("~/.config/fish/config.fish", ealias-arch)
 
+#+call: fread("~/.config/fish/config.fish")
 
-#+call: fwrite("~/.bashrc", ealias_txt())
+***** Emacs Setup For MAC OSX
 
-#+RESULTS:
-  - Wrap ealiasarch
-#+NAME: ealiasarch_txt
-#+BEGIN_SRC python :session :noweb yes
-"""
-<<ealiasarch>>
-"""
-#+END_SRC
+#+NAME: ealias-mac-osx
+#+begin_example
+alias emd='emacs --daemon'
+alias e='emacsclient -t'
+alias ec='emacsclient -c'
+alias vim='emacsclient -t'
+alias vi='emacsclient -t'
+#+end_example
 
-#+call: fwrite("~/.config/fish/config.fish", ealiasarch_txt())
+#+call: fwrite("~/.bashrc", ealias-mac-osx)
 
 #+RESULTS:
 : nil
-#+call: fread("~/.config/fish/config.fish")
+
+#+call: fread("~/.bashrc")
 
 #+RESULTS:
-:
 : alias emd='emacs --daemon'
 : alias e='emacsclient -t'
 : alias ec='emacsclient -c'
 : alias vim='emacsclient -t'
 : alias vi='emacsclient -t'
-: #set -x TERM xterm-256color
 
-***** backup exising [[~/.emacs.d][emacs.d]] and link prelude
-#+BEGIN_SRC sh
-mv ~/.emacs.d ~/backups/
-ls -la ~/.emacs.d
-#+END_SRC
+**** Run Prelude for the First time
 
-#+RESULTS:
 
-#+BEGIN_SRC sh :noweb yes
-dr=`pwd`
-ln -s /usr/local/src/prelude ~/.emacs.d
-ls -l ~/.emacs.d
-#+END_SRC
-
-#+RESULTS:
-: lrwxrwxrwx 1 root root 22 ফেব্রু  10 21:39 /root/.emacs.d -> /usr/local/src/prelude
-
-***** Run Prelude for the First time
 #+NAME: emacs
 #+BEGIN_SRC sh
 emacs
 #+END_SRC
 
-#+call: wrap("emacs","aync") :results raw
-
-#+RESULTS:
 #+NAME: emacs_aync
 #+BEGIN_SRC python :session :noweb yes :post cmdaync(*this*)
 """<<emacs>>"""
 #+END_SRC
 
 #+RESULTS: emacs_aync
-: command  is sended to /tmp/prelude
+: command  is sended to /tmp/org
